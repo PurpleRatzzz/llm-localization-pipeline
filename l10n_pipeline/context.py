@@ -48,8 +48,24 @@ def _lines(entries: list[GlossaryEntry]) -> str:
     return "\n".join(lines)
 
 
-def build_context(units: list[Unit], glossary: list[GlossaryEntry], style_rules: str) -> str:
-    """The text that replaces {context} in a prompt template."""
+def tm_block(units: list[Unit], tm_matches: dict[str, list[dict]]) -> str:
+    lines = []
+    for unit in units:
+        for match in tm_matches.get(unit.id, []):
+            lines += [f"- For segment {unit.id} ({match['score']}% match):",
+                      f"  EN: {match['source']}",
+                      f"  ZH: {match['target']}"]
+    return "\n".join(lines)
+
+
+def build_context(units: list[Unit], glossary: list[GlossaryEntry], style_rules: str,
+                  tm_matches: dict[str, list[dict]] | None = None) -> str:
+    """The text that replaces {context} in a prompt template.
+
+    tm_matches (config D only): fuzzy matches per unit id. They go into the
+    context block rather than the prompt template, so configs A-C send exactly
+    the same requests as before and the comparison isolates the TM's effect.
+    """
     parts = ["## Style rules\n\n" + style_rules]
     ui = [e for unit in units for _, e in find_ui_labels(unit.source, glossary)]
     if ui:
@@ -59,4 +75,10 @@ def build_context(units: list[Unit], glossary: list[GlossaryEntry], style_rules:
     text = [e for unit in units for e in find_terms(unit.source, glossary)]
     if text:
         parts.append("## Terms in the running text of these segments\n\n" + _lines(text))
+    tm = tm_block(units, tm_matches or {})
+    if tm:
+        parts.append("## Translation memory for these segments\n\n"
+                     "Approved translations of similar (not identical) segments from the same "
+                     "documentation. Reuse their terminology and phrasing where they apply, but "
+                     "translate what each source actually says.\n\n" + tm)
     return "\n" + "\n\n".join(parts) + "\n"

@@ -11,7 +11,7 @@ python -m l10n_pipeline translate --in labels.xlf --out labels.zh-CN.xlf --conte
 | Option | Values | Default |
 |---|---|---|
 | `--content-type` | `ui`: plain-text UI strings such as Salesforce Custom Labels; `doc`: XML fragments with inline tags | `doc` |
-| `--config` | `A` translate only, `B` + style rules and glossary, `C` + edit and verify | `C` |
+| `--config` | `A` translate only, `B` + style rules and glossary, `C` + edit and verify, `D` B + translation memory | `C` |
 | `--target-lang` | only `zh-CN` has a glossary and style rules today | `zh-CN` |
 
 Requires `ANTHROPIC_API_KEY` in the environment.
