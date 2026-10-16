@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file original="custom_labels.en.xlf" source-language="en-US" target-language="zh-CN" datatype="xml">
+    <body>
+      <trans-unit id="Close_Case_Button" maxwidth="10" size-unit="char">
+        <source>Close</source>
+        <target state="translated">关闭</target>
+        <note from="developer" annotates="general">Button label on the Case record page. Closes the support case; it does not close a window.</note>
+      </trans-unit>
+      <trans-unit id="Records_Updated_Toast">
+        <source>{0} records updated &amp; saved.</source>
+        <target state="translated">已更新并保存 {0} 条记录。</target>
+        <note from="developer" annotates="general">Toast message after a bulk edit. {0} is the number of records.</note>
+      </trans-unit>
+      <trans-unit id="Opportunity_Stage_Help" maxwidth="40" size-unit="char">
+        <source>Select the stage that best describes this Opportunity.</source>
+        <target state="translated">选择最能描述此业务机会的阶段。</target>
+        <note from="developer" annotates="general">Help text under the Stage picklist.</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

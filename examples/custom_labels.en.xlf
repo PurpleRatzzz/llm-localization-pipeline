@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Example input for the translate command with content type "ui":
+     Salesforce Custom Labels as XLIFF 1.2. The label description travels as a
+     <note>, the length limit as maxwidth with size-unit="char", and parameters
+     as plain-text {0}. -->
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file original="CustomLabels.labels-meta.xml" source-language="en-US" target-language="zh-CN" datatype="xml">
+    <body>
+      <trans-unit id="Close_Case_Button" maxwidth="10" size-unit="char">
+        <source>Close</source>
+        <note from="developer">Button label on the Case record page. Closes the support case; it does not close a window.</note>
+      </trans-unit>
+      <trans-unit id="Records_Updated_Toast">
+        <source>{0} records updated &amp; saved.</source>
+        <note from="developer">Toast message after a bulk edit. {0} is the number of records.</note>
+      </trans-unit>
+      <trans-unit id="Opportunity_Stage_Help" maxwidth="40" size-unit="char">
+        <source>Select the stage that best describes this Opportunity.</source>
+        <note from="developer">Help text under the Stage picklist.</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
