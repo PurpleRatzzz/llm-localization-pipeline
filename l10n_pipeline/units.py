@@ -24,6 +24,17 @@ class Unit:
 
 
 @dataclass
+class GlossaryEntry:
+    """One approved term. Only "required" terms are enforced by the QA gate;
+    "ambiguous" terms are shown to the model as candidates with a usage note."""
+
+    source: str
+    target: str
+    kind: Literal["required", "ambiguous"] = "required"
+    note: str = ""
+
+
+@dataclass
 class Issue:
     """One problem found by the QA gate or the AI verifier."""
 
