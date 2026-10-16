@@ -32,7 +32,10 @@ TARGETS_SCHEMA = {
 }
 
 MQM_CATEGORIES = ["accuracy", "terminology", "fluency", "style", "locale_convention", "markup"]
-MQM_SEVERITIES = ["minor", "major", "critical"]
+# "not_an_error" is an escape hatch: in a tune run the verifier wrote "no
+# real error" in its explanation and still had to pick a severity. Those
+# entries are dropped in code.
+MQM_SEVERITIES = ["not_an_error", "minor", "major", "critical"]
 # Standard MQM penalty weights. The total is computed in code, not by the model,
 # so the score is consistent: the model only classifies each error.
 MQM_WEIGHTS = {"minor": 1, "major": 5, "critical": 25}
@@ -50,12 +53,14 @@ VERIFY_SCHEMA = {
                         "type": "array",
                         "items": {
                             "type": "object",
+                            # The model writes fields in this order: the
+                            # explanation first, then the verdict based on it.
                             "properties": {
+                                "explanation": {"type": "string"},
                                 "category": {"type": "string", "enum": MQM_CATEGORIES},
                                 "severity": {"type": "string", "enum": MQM_SEVERITIES},
-                                "explanation": {"type": "string"},
                             },
-                            "required": ["category", "severity", "explanation"],
+                            "required": ["explanation", "category", "severity"],
                             "additionalProperties": False,
                         },
                     },
@@ -105,8 +110,13 @@ def edit(units: list[Unit], drafts: dict[str, str], findings: dict[str, list[Iss
     for unit in units:
         item = _unit_payload(unit)
         item["draft"] = drafts[unit.id]
-        # The editor sees the gate's findings, so it fixes known problems first.
-        item["qa_findings"] = [f"[{i.severity}] {i.check}: {i.message}" for i in findings[unit.id]]
+        # The editor sees the gate's errors, so it fixes known problems first.
+        # Warnings are left out: on human references most of them are false
+        # positives (numbers 10/11, tag_order 12/12), and in the first tune run
+        # the editor "fixed" a numbers warning by turning a correct 1000 万
+        # back into "10 million".
+        item["qa_findings"] = [f"{i.check}: {i.message}"
+                               for i in findings[unit.id] if i.severity == "error"]
         items.append(item)
     response = llm.call_json(
         system=_system_prompt("edit", context),
@@ -124,7 +134,9 @@ def verify(units: list[Unit], targets: dict[str, str],
         user=_user_message(items),
         schema=VERIFY_SCHEMA,
     )
-    return {e["id"]: e["errors"] for e in response.data["evaluations"]}, response
+    errors = {e["id"]: [err for err in e["errors"] if err["severity"] != "not_an_error"]
+              for e in response.data["evaluations"]}
+    return errors, response
 
 
 def mqm_penalty(errors: list[dict]) -> int:

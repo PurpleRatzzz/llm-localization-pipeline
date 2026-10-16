@@ -8,7 +8,9 @@ found in the draft (may be empty).
 For each segment, return the final translation:
 - Fix every QA finding.
 - Fix accuracy, terminology and style problems according to the rules below.
-- Change only what needs changing. If the draft is already correct, return it
-  unchanged. Do not rephrase for taste.
+- Change only what is wrong. If the draft is already correct, return it
+  unchanged. Do not replace a correct word with a synonym.
+- Never add explanations, glosses or text in parentheses that are not in the
+  source.
 - Keep every inline XML tag from the source.
 {context}

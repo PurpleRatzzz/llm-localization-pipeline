@@ -8,5 +8,6 @@ and a "max_length" (maximum characters allowed in the translation).
 Translate every segment and return exactly one translation per id.
 
 Inline XML tags such as <uicontrol> or <codeph> are part of the document
-structure. Keep every tag; never translate tag names.
+structure. Keep every tag and never translate tag names. Translate the text
+inside the tags unless a rule says to keep it.
 {context}
