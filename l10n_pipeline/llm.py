@@ -9,6 +9,7 @@ Keeping every call in one place gives three things the pipeline relies on:
 
 import hashlib
 import json
+import time
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -39,6 +40,7 @@ class LLMResponse:
     data: dict      # the parsed JSON object the model returned
     usage: dict     # token counts reported by the API
     cost_usd: float
+    seconds: float  # how long the original API call took
     cached: bool    # True if served from the disk cache (no new spend)
 
 
@@ -85,9 +87,12 @@ def call_json(*, system: str, user: str, schema: dict, max_tokens: int = 8000,
     cache_file = CACHE_DIR / f"{key}.json"
     if cache_file.exists():
         saved = json.loads(cache_file.read_text(encoding="utf-8"))
-        return LLMResponse(saved["data"], saved["usage"], cost_of(saved["usage"], model), cached=True)
+        return LLMResponse(saved["data"], saved["usage"], cost_of(saved["usage"], model),
+                           saved["seconds"], cached=True)
 
+    start = time.perf_counter()
     response = _get_client().messages.create(**params)
+    seconds = time.perf_counter() - start
 
     # Check why the model stopped before reading the content.
     if response.stop_reason == "refusal":
@@ -105,5 +110,8 @@ def call_json(*, system: str, user: str, schema: dict, max_tokens: int = 8000,
     }
 
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    cache_file.write_text(json.dumps({"data": data, "usage": usage}, ensure_ascii=False), encoding="utf-8")
-    return LLMResponse(data, usage, cost_of(usage, model), cached=False)
+    # Cost and latency are stored with the answer, so a cached rerun reports
+    # what producing the answer actually cost.
+    saved = {"data": data, "usage": usage, "seconds": round(seconds, 2)}
+    cache_file.write_text(json.dumps(saved, ensure_ascii=False), encoding="utf-8")
+    return LLMResponse(data, usage, cost_of(usage, model), seconds, cached=False)
