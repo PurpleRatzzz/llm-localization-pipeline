@@ -18,11 +18,16 @@ Run from the repo root:
 import csv
 import json
 import re
+import sys
 import xml.etree.ElementTree as ET
 from collections import Counter, defaultdict
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+# `python -I` does not put the repo root on sys.path; add it to import the gate.
+sys.path.insert(0, str(REPO_ROOT))
+from l10n_pipeline.qa_gate import term_pattern  # noqa: E402  (same matching rule as the gate)
+
 TRAIN = REPO_ROOT / "data" / "raw" / "train.jsonl"
 EVAL_SETS = [REPO_ROOT / "data" / "golden.jsonl", REPO_ROOT / "data" / "tune.jsonl"]
 OUT = REPO_ROOT / "context" / "glossary_candidates.zh-CN.csv"
@@ -83,25 +88,15 @@ def align_labels(train_rows):
     return merge_plurals(counts)
 
 
-def term_pattern(term):
-    # Whole word, singular or plural, case-sensitive: "Case" (个案) is an object
-    # name, "in this case" (情况) is not. Same rule as the QA gate.
-    forms = [term, term + "s", term + "es"]
-    if re.search(r"[^aeiou]y$", term):
-        forms.append(term[:-1] + "ies")  # Opportunity -> Opportunities
-    alternatives = "|".join(re.escape(f) for f in sorted(forms, key=len, reverse=True))
-    return re.compile(rf"(?<!\w)(?:{alternatives})(?!\w)")
-
-
 def occurrences(term, texts):
-    """How many texts contain the term."""
-    pattern = term_pattern(term)
+    """How many texts contain the term (whole word, plural allowed, case-sensitive)."""
+    pattern = re.compile(term_pattern(term))
     return sum(bool(pattern.search(t)) for t in texts)
 
 
 def hit_rate(term, target, train_rows):
     """Share of train segments containing `term` whose reference contains `target`."""
-    pattern = term_pattern(term)
+    pattern = re.compile(term_pattern(term))
     hits = [target in row["reference"] for row in train_rows if pattern.search(row["source"])]
     return sum(hits) / len(hits) if hits else 0.0
 
