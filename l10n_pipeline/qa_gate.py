@@ -251,7 +251,14 @@ def term_pattern(term: str) -> str:
             and term[-2].lower() not in "aeiou":
         forms.append(re.escape(term[:-1]) + "ies")    # Opportunity -> Opportunities
     # (?<!\w) and (?!\w): no letter/digit right before or after, i.e. a whole word.
-    return r"(?<!\w)(?:" + "|".join(forms) + r")(?!\w)"
+    # The other lookarounds skip code-like references, which must stay in
+    # English: [Case].Id (formula field), {!Case.Id} (merge field),
+    # $User, Account.Name. Found in a pipeline test: the gate demanded 个案 in
+    # "[Case].Id", and the edit stage obeyed and broke the reference.
+    # A plain sentence-final period ("Open the Case.") still matches.
+    before = r"(?<![\w\[.$!{])"
+    after = r"(?![\w\]])(?!\.\w)"
+    return before + r"(?:" + "|".join(forms) + r")" + after
 
 
 def find_terms(source: str, glossary: list[GlossaryEntry]) -> list[GlossaryEntry]:

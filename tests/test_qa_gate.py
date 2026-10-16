@@ -257,6 +257,16 @@ def test_matching_is_case_sensitive():
                          glossary=GLOSSARY) == []
 
 
+def test_code_like_references_are_not_terms():
+    # Found in a pipeline run (dev 0025): the gate demanded 个案 inside
+    # "[Case].Id" and the edit stage broke the field reference to "[个案].Id".
+    for source in ["Select <uicontrol>[Case].Id</uicontrol>.", "Use {!Case.Id} here.",
+                   "Map Case.Subject to the field.", "Use $Case in formulas."]:
+        assert find_terms(source, GLOSSARY) == [], source
+    # A sentence-final period is not a code reference.
+    assert [e.source for e in find_terms("Open the Case.", GLOSSARY)] == ["Case"]
+
+
 def test_term_inside_protected_tag_is_ignored():
     source = "Query the <codeph>Account</codeph> table."
     target = "查询 <codeph>Account</codeph> 表。"

@@ -1,13 +1,13 @@
 source,target,share,hit_rate,train_count,eval_segments,suggested_kind,alternatives
-User,用户,0.98,0.97,47,12,required,简档 (1)
+User,用户,0.98,0.98,47,12,required,简档 (1)
 Select,选择,1.00,0.95,15,10,required,
 Community,社区,1.00,0.92,8,9,required,
 Edit,编辑,0.99,1.00,545,7,required,保存 (2); 自定义入口网站选项卡 (1); 搜索筛选器字段 (1)
-Account,客户,0.93,0.93,29,7,required,帐户 (2)
 All,所有,0.68,0.93,22,7,ambiguous,全部 (7)
 Enable,启用,1.00,0.95,19,7,required,
-Email,电子邮件,1.00,0.97,47,6,required,
+Email,电子邮件,1.00,0.98,47,6,required,
 Create,创建,1.00,0.99,40,6,required,
+Account,客户,0.93,0.94,29,6,required,帐户 (2)
 Page,页面,1.00,0.89,15,6,ambiguous,
 Find,查找,0.80,0.96,15,6,ambiguous,搜索 (2); Find (查找) (1)
 Quick Find,快速查找,0.99,0.99,710,5,required,查找方框 (1); 全局操作 (1); 选项卡 (1)
@@ -17,45 +17,45 @@ Settings,设置,0.98,0.99,66,5,required,Files Connect (1)
 Type,类型,0.97,0.92,37,5,required,阶段 (1)
 Field,字段,1.00,0.77,25,5,ambiguous,
 App,应用程序,1.00,0.88,14,5,ambiguous,
-Site,站点,1.00,0.88,10,5,ambiguous,
+Site,站点,1.00,0.94,10,5,required,
 Object,对象,1.00,0.97,6,5,required,
 Notifications,通知,1.00,0.98,3,5,required,
 contains,包含,1.00,0.90,3,5,ambiguous,
 Search,搜索,1.00,0.97,37,4,required,
-Setup,设置,0.97,0.99,32,4,required,SalesforceA (1)
+Setup,设置,0.97,1.00,32,4,required,SalesforceA (1)
 Change,更改,0.90,0.99,21,4,required,字段旁边的 (1); 个案所有人 (1)
-Case,个案,0.94,0.96,16,4,required,来源 (1)
 Configure,配置,0.91,1.00,11,4,required,已安装的软件包 (1)
 Available,可用,0.88,0.53,8,4,ambiguous,适用于 (1)
-Record,记录,1.00,0.99,6,4,required,
+Record,记录,1.00,1.00,6,4,required,
 Run,运行,0.80,0.99,5,4,ambiguous,上传 (1)
 Save,保存,0.98,0.96,310,3,required,Save (保存) (3); 已启用 (2); 确定 (1)
-Name,名称,0.85,0.70,75,3,ambiguous,姓名 (7); 名 (2); 相关 (1)
+Name,名称,0.85,0.72,75,3,ambiguous,姓名 (7); 名 (2); 相关 (1)
 File,文件,0.82,0.94,40,3,ambiguous,File (文件) (4); 我的库中的文件 (1); 上载到我的文件 (1)
 Private,专用,0.90,0.85,20,3,ambiguous,成为专用 (1); 专有 (1)
 Workspace,工作区,0.73,1.00,11,3,ambiguous,管理 (2); Workspace (工作区) (1)
 Manage,管理,0.90,1.00,10,3,required,所有社区 (1)
 Login,登录,1.00,0.95,9,3,required,
-Lead,潜在客户,1.00,0.98,8,3,required,
+Lead,潜在客户,1.00,0.99,8,3,required,
 Group,组,0.62,0.80,8,3,ambiguous,小组 (3)
 Read,读取,0.71,0.59,7,3,ambiguous,阅读 (2)
 Task,任务,1.00,0.99,7,3,required,
 Community Workspaces,社区工作区,1.00,1.00,6,3,required,
-Content,内容,0.80,0.77,5,3,ambiguous,查看已归档内容 (1)
+Content,内容,0.80,0.78,5,3,ambiguous,查看已归档内容 (1)
 Property,属性,1.00,1.00,3,3,required,
 Portal,入口网站,1.00,0.98,3,3,required,
 Sharing,共享,1.00,1.00,37,2,required,
 Refresh,刷新,1.00,1.00,21,2,required,
 More,更多,1.00,0.83,21,2,ambiguous,
 Show,显示,0.95,0.99,19,2,required,我的小组的个案 (1)
-Debug,调试,0.56,0.93,16,2,ambiguous,Debug (调试) (6); Debug (调试 (1)
+Case,个案,0.94,0.98,16,2,required,来源 (1)
+Debug,调试,0.56,1.00,16,2,ambiguous,Debug (调试) (6); Debug (调试 (1)
 Value,值,1.00,0.98,15,2,required,
 Company,公司,1.00,0.97,15,2,required,
 Tab,选项卡,0.93,0.94,14,2,required,快速查找 (1)
 Report,报表,1.00,0.96,10,2,required,
 Custom,自定义,1.00,0.99,9,2,required,
 Test,测试,0.89,0.99,9,2,ambiguous,Tests (测试) (1)
-Default,默认,0.88,0.99,8,2,ambiguous,默认值 (1)
+Default,默认,0.88,1.00,8,2,ambiguous,默认值 (1)
 Sync,同步,1.00,0.77,7,2,ambiguous,
 Question,问题,1.00,0.95,7,2,required,
 equals,等于,0.86,0.86,7,2,ambiguous,等号 (1)
@@ -69,20 +69,20 @@ Apex Class,Apex 类,1.00,0.98,3,2,required,
 Class,类,1.00,0.97,3,2,required,
 Builder,生成器,1.00,0.72,3,2,ambiguous,
 Feed,摘要,1.00,0.95,3,2,required,
-System,系统,1.00,0.83,3,2,ambiguous,
+System,系统,1.00,0.95,3,2,required,
 Document,文档,1.00,0.96,3,2,required,
 Status,状态,0.96,0.97,72,1,required,主题 (1); 完成日期 (1); 优先级 (1)
-Description,描述,0.70,0.77,63,1,ambiguous,备注 (13); 说明 (6)
+Description,描述,0.70,0.79,63,1,ambiguous,备注 (13); 说明 (6)
 Remove,删除,0.95,0.76,61,1,ambiguous,移除 (2); 添加 (1)
 Stage,阶段,0.94,0.94,49,1,required,可能性 (1); 项目开始日期 (1); 预测类别 (1)
 Category,类别,0.57,0.98,40,1,ambiguous,多个类别 (17)
 Amount,金额,0.94,0.81,33,1,ambiguous,Opportunity category (1); 数量 (1)
 Permission Sets,权限集,0.97,1.00,30,1,required,管理用户 (1)
-Profile,简档,0.97,0.95,30,1,required,位置 (1)
+Profile,简档,0.97,0.96,30,1,required,位置 (1)
 Sharing Setting,共享设置,0.96,1.00,26,1,required,库 (1)
 Customize,自定义,1.00,1.00,26,1,required,
-Contact,联系人,0.96,0.76,24,1,ambiguous,客户 (1)
-Label,标签,1.00,0.96,23,1,required,
+Contact,联系人,0.96,0.77,24,1,ambiguous,客户 (1)
+Label,标签,1.00,1.00,23,1,required,
 Apply,应用,1.00,0.77,20,1,ambiguous,
 Library,库,0.89,0.99,19,1,ambiguous,添加 Google 文档 (1); 共享设置 (1)
 Publish,发布,0.94,0.99,18,1,required,取消发布 (1)
@@ -91,29 +91,28 @@ Record Type,记录类型,1.00,0.99,17,1,required,
 System Permissions,系统权限,0.88,0.97,16,1,ambiguous,系统权限集 (1); 编辑 (1)
 Dashboard,仪表板,1.00,1.00,15,1,required,
 Submit,提交,1.00,1.00,15,1,required,
-Username,用户名,1.00,0.88,15,1,ambiguous,
+Username,用户名,1.00,0.97,15,1,required,
 Start,开始,0.79,0.74,14,1,ambiguous,启动 (3)
 Update,更新,1.00,1.00,14,1,required,
 Go!,执行!,0.85,0.85,13,1,ambiguous,执行 (1); 搜索! (1)
 Language,语言,1.00,0.94,13,1,required,
-Package,软件包,0.92,0.92,13,1,required,封装 (1)
+Package,软件包,0.92,0.93,13,1,required,封装 (1)
 Assign,分配,1.00,0.98,13,1,required,
 Yes,是,0.92,0.95,13,1,required,“是” (1)
 Connected App,连接的应用程序,1.00,0.93,12,1,required,
-Role,角色,1.00,0.98,12,1,required,
+Role,角色,1.00,0.99,12,1,required,
 Created By,创建人,0.83,0.91,12,1,ambiguous,创建者 (2)
 Territory,区域,1.00,0.99,12,1,required,
 Discount,折扣,1.00,1.00,10,1,required,
 Set Up,设置,1.00,1.00,9,1,required,
 Campaign,市场活动,0.89,0.99,9,1,ambiguous,活动 (1)
 Clear,清除,0.78,0.97,9,1,ambiguous,Clear (清除) (2)
-Action,操作,1.00,0.97,9,1,required,
-Flow,流,0.75,0.88,8,1,ambiguous,流程 (2)
+Action,操作,1.00,0.98,9,1,required,
+Flow,流,0.75,1.00,8,1,ambiguous,流程 (2)
 Quantity,数量,1.00,0.98,8,1,required,
 Member,成员,1.00,1.00,8,1,required,
 Submit for Approval,提交待批准,0.88,0.81,8,1,ambiguous,提交以待批准 (1)
 Recommendations,推荐,0.88,0.88,8,1,ambiguous,建议 (1)
-Id,ID,1.00,0.65,7,1,ambiguous,
 Subscribe,订阅,0.86,0.84,7,1,ambiguous,订购 (1)
 Dataset,数据集,1.00,0.99,7,1,required,
 Export,导出,1.00,0.97,7,1,required,
@@ -144,7 +143,7 @@ Search Results,搜索结果,1.00,1.00,4,1,required,
 People,人员,1.00,0.78,4,1,ambiguous,
 Merge,合并,1.00,0.99,4,1,required,
 Visibility,可见性,1.00,0.93,4,1,required,
-Template,模板,1.00,0.99,4,1,required,
+Template,模板,1.00,1.00,4,1,required,
 Average,平均,0.67,0.99,3,1,ambiguous,平均值 (1)
 Shipping Address,发货地址,0.67,0.62,3,1,ambiguous,收货地址 (1)
 Service Resource,服务资源,1.00,0.99,3,1,required,
@@ -155,6 +154,6 @@ Discount Percent,折扣百分比,1.00,1.00,3,1,required,
 Externally Available,外部可用,1.00,1.00,3,1,required,
 My Email to Salesforce,我的电子邮件至 Salesforce,1.00,1.00,3,1,required,
 Revenue,收入,1.00,0.97,3,1,required,
-Recipient,收件人,0.67,0.86,3,1,ambiguous,接收者 (1)
+Recipient,收件人,0.67,0.89,3,1,ambiguous,接收者 (1)
 Received Connection Name,收到的连接名称,1.00,0.83,3,1,ambiguous,
 Campaign Member Type,市场活动成员类型,1.00,1.00,3,1,required,
