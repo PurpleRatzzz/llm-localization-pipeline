@@ -30,6 +30,11 @@ from l10n_pipeline.units import GlossaryEntry, Issue
 # parmname 8%, uicontrol 6%, systemoutput 4/6 (these are UI labels and prose).
 PROTECTED_TAGS = {"codeph", "varname", "filepath"}
 
+# Tags whose text is a UI label (a button, field or page name). Their text is
+# checked against the "ui" glossary as a whole label, not word by word, and is
+# left out of the running text that "text" glossary terms are matched in.
+UI_TAGS = {"uicontrol", "parmname"}
+
 # Placeholders that must survive translation exactly:
 #   {0}, {1}  Salesforce Custom Label parameters (UI strings)
 #   #URL1#    the dataset masks URLs this way: 42/42 kept in dev references
@@ -91,16 +96,18 @@ def parse_fragment(segment: str) -> tuple[ET.Element | None, str]:
         return None, str(err).split(":")[0]   # e.g. "mismatched tag"
 
 
-def text_nodes(root: ET.Element, skip_protected: bool = False) -> list[str]:
+def text_nodes(root: ET.Element, skip_protected: bool = False,
+               skip_ui: bool = False) -> list[str]:
     """The text between tags, in reading order (entities already decoded).
 
     With skip_protected=True, the text inside PROTECTED_TAGS is left out; it
-    is already checked verbatim by check_protected_content.
+    is already checked verbatim by check_protected_content. With skip_ui=True,
+    the text inside UI_TAGS is left out too, giving the running text only.
     """
     nodes = []
 
     def walk(elem):
-        if skip_protected and elem.tag in PROTECTED_TAGS:
+        if (skip_protected and elem.tag in PROTECTED_TAGS) or (skip_ui and elem.tag in UI_TAGS):
             nodes.append(" ")   # keep the words on both sides of the tag apart
             return
         if elem.text:
@@ -271,8 +278,9 @@ def term_pattern(term: str) -> str:
 
 
 def find_terms(source: str, glossary: list[GlossaryEntry]) -> list[GlossaryEntry]:
-    """Glossary entries (any kind) whose source term occurs in `source`, longest match first,
-    ignoring text inside protected tags.
+    """"text"-scope glossary entries (any kind) whose term occurs in the running
+    text of `source`, longest match first. Text inside protected tags and UI
+    tags is ignored (UI labels are checked by find_ui_labels).
 
     Public so the prompt builder shows the model exactly the terms the gate
     will check. Matching is CASE-SENSITIVE: Salesforce object and UI names are
@@ -283,16 +291,17 @@ def find_terms(source: str, glossary: list[GlossaryEntry]) -> list[GlossaryEntry
     """
     root, _ = parse_fragment(source)
     if root is not None:
-        text = "".join(text_nodes(root, skip_protected=True))
+        text = "".join(text_nodes(root, skip_protected=True, skip_ui=True))
     else:
         # Not XML (e.g. a UI string with a literal "&"): use the text as it is.
         text = "".join(_fallback_text_nodes(source))
 
     found = []
     claimed = []   # character spans already matched by a longer term
+    text_entries = [e for e in glossary if e.scope == "text"]
     # Longest term first, so "Person Account" claims its words before "Account"
     # gets a chance to match inside it.
-    for entry in sorted(glossary, key=lambda e: len(e.source), reverse=True):
+    for entry in sorted(text_entries, key=lambda e: len(e.source), reverse=True):
         matched = False
         for match in re.finditer(term_pattern(entry.source), text):
             start, end = match.span()
@@ -317,6 +326,52 @@ def check_terminology(source: str, target_text: str,
                                 f'Term "{entry.source}" must be translated as '
                                 f'"{entry.target}", not found in target'))
     return issues
+
+
+def _ui_labels(root: ET.Element) -> list[tuple[str, str]]:
+    """(tag, whole text) of every UI tag, e.g. ("uicontrol", "Save As")."""
+    return [(elem.tag, " ".join("".join(elem.itertext()).split()))
+            for elem in root.iter() if elem.tag in UI_TAGS]
+
+
+def _ui_entry(label: str, glossary: list[GlossaryEntry]) -> GlossaryEntry | None:
+    """The "ui" entry whose term is the WHOLE label (plurals allowed).
+
+    Whole-label matching means "Save As" never matches the entry "Save": a UI
+    string has one approved translation as a unit, like a TM match.
+    """
+    for entry in glossary:
+        if entry.scope == "ui" and re.fullmatch(term_pattern(entry.source), label):
+            return entry
+    return None
+
+
+def find_ui_labels(source: str, glossary: list[GlossaryEntry]) -> list[tuple[str, GlossaryEntry]]:
+    """(tag, entry) for every UI tag in `source` whose label is in the "ui" glossary."""
+    root, _ = parse_fragment(source)
+    if root is None:
+        return []
+    found = []
+    for tag, label in _ui_labels(root):
+        entry = _ui_entry(label, glossary)
+        if entry:
+            found.append((tag, entry))
+    return found
+
+
+def check_ui_labels(source: str, tgt_root: ET.Element,
+                    glossary: list[GlossaryEntry]) -> list[Issue]:
+    # Each required label must appear as the whole text of a target tag of the
+    # same kind. Comparing as a multiset (not position by position) allows
+    # Chinese word order to move the tags.
+    found = find_ui_labels(source, glossary)
+    expected = Counter((tag, entry.target) for tag, entry in found if entry.kind == "required")
+    english = {(tag, entry.target): entry.source for tag, entry in found}   # for the message
+    missing = expected - Counter(_ui_labels(tgt_root))
+    return [Issue("ui_label", "error",
+                  f'UI label <{tag}>{english[(tag, zh)]}</{tag}> must be translated '
+                  f'as <{tag}>{zh}</{tag}>')
+            for tag, zh in missing.elements()]
 
 
 def check_length(source_text: str, target_text: str, max_length: int | None,
@@ -371,6 +426,11 @@ def check_segment(source: str, target: str, *, glossary: list[GlossaryEntry] | N
         # character and there are no tags, so the XML checks do not apply.
         src_nodes, tgt_nodes = [source], [target]
         src_free, tgt_free = source, target
+        # A whole UI string is itself a UI label: "Save" must become 保存.
+        entry = _ui_entry(source.strip(), glossary or [])
+        if entry and entry.kind == "required" and target.strip() != entry.target:
+            issues.append(Issue("ui_label", "error",
+                                f'UI label "{source.strip()}" must be translated as "{entry.target}"'))
     else:
         src_root, src_error = parse_fragment(source)
         tgt_root, tgt_error = parse_fragment(target)
@@ -385,6 +445,7 @@ def check_segment(source: str, target: str, *, glossary: list[GlossaryEntry] | N
                 tag_issues = check_tag_order(src_root, tgt_root)
             issues += tag_issues
             issues += check_protected_content(src_root, tgt_root)
+            issues += check_ui_labels(source, tgt_root, glossary or [])
             src_nodes, tgt_nodes = text_nodes(src_root), text_nodes(tgt_root)
             src_free = "".join(text_nodes(src_root, skip_protected=True))
             tgt_free = "".join(text_nodes(tgt_root, skip_protected=True))

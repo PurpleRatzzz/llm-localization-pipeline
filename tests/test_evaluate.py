@@ -175,7 +175,8 @@ def test_whole_script_on_the_real_golden_set(tmp_path):
     assert reference["chrf"]["overall"] == pytest.approx(100)
     # target = reference gives exactly the human-reference row. (Not 100% tag
     # integrity: the reference of dev 1539 is broken, see gate_calibration.md.)
-    for metric in ("tag_integrity", "protected_intact", "term_accuracy", "gate_pass"):
+    for metric in ("tag_integrity", "protected_intact", "ui_label_accuracy", "term_accuracy",
+                   "gate_pass"):
         assert reference[metric] == results["human_reference"][metric]
     assert source["chrf"]["overall"] < 40
     assert reference["vs_baseline"]["delta"] > 50

@@ -5,7 +5,7 @@ Each check gets at least one passing and one failing case. Strings marked
 segment enzh_dev_000000NNNN); the rest are minimal hand-written cases.
 """
 
-from l10n_pipeline.qa_gate import check_segment, find_terms, passed
+from l10n_pipeline.qa_gate import check_segment, find_terms, find_ui_labels, passed
 from l10n_pipeline.units import GlossaryEntry
 
 
@@ -350,3 +350,62 @@ def test_product_name_left_in_english_passes():
     # No lowercase prose words, so keeping it in English is allowed.
     source = "<xref>Microsoft Active Directory Federation Services 2.0</xref>."
     assert check_segment(source, source) == []
+
+
+# --------------------------------------------------------------- ui labels
+
+UI_GLOSSARY = [
+    GlossaryEntry("Save", "保存", scope="ui"),
+    GlossaryEntry("Save As", "另存为", scope="ui"),
+    GlossaryEntry("New", "新建", scope="ui"),
+    GlossaryEntry("Lead", "潜在客户", scope="ui"),
+    GlossaryEntry("View", "视图", kind="ambiguous", scope="ui"),
+]
+
+
+def test_ui_label_must_match_exactly():
+    source = "Click <uicontrol>Save</uicontrol>."
+    assert check_segment(source, "单击<uicontrol>保存</uicontrol>。", glossary=UI_GLOSSARY) == []
+    issues = check_segment(source, "单击<uicontrol>存储</uicontrol>。", glossary=UI_GLOSSARY)
+    assert checks(issues, "error") == ["ui_label"]
+
+
+def test_ui_label_is_matched_as_a_whole_label():
+    # "Save As" is its own UI string: the entry "Save" does not apply inside it.
+    found = find_ui_labels("Click <uicontrol>Save As</uicontrol>.", UI_GLOSSARY)
+    assert [e.source for _, e in found] == ["Save As"]
+    assert check_segment("Click <uicontrol>Save As</uicontrol>.", "单击<uicontrol>另存为</uicontrol>。",
+                         glossary=UI_GLOSSARY) == []
+
+
+def test_ui_label_does_not_apply_to_running_text():
+    # The "New" button is 新建, but "new" in a sentence is not a UI label.
+    assert check_segment("Create a New Record type.", "创建新记录类型。", glossary=UI_GLOSSARY) == []
+
+
+def test_ui_labels_may_be_reordered():
+    source = "Click <uicontrol>New</uicontrol> or <uicontrol>Save</uicontrol>."
+    target = "单击<uicontrol>保存</uicontrol>或<uicontrol>新建</uicontrol>。"
+    assert checks(check_segment(source, target, glossary=UI_GLOSSARY), "error") == []
+
+
+def test_ui_label_plural_and_ambiguous():
+    # "Leads" (a tab) matches the entry "Lead"; ambiguous labels are not enforced.
+    assert checks(check_segment("Open <uicontrol>Leads</uicontrol>.", "打开<uicontrol>线索</uicontrol>。",
+                                glossary=UI_GLOSSARY), "error") == ["ui_label"]
+    assert check_segment("Open <uicontrol>View</uicontrol>.", "打开<uicontrol>查看</uicontrol>。",
+                         glossary=UI_GLOSSARY) == []
+
+
+def test_text_terms_ignore_ui_tags_and_ui_entries():
+    # A "text" term inside a UI tag is not a running-text term, and "ui"
+    # entries are never matched in running text.
+    assert find_terms("Click <uicontrol>Account Settings</uicontrol>.", GLOSSARY) == []
+    assert find_terms("Save the record.", UI_GLOSSARY) == []
+
+
+def test_whole_ui_string_is_a_ui_label():
+    # content_type "ui" (a Custom Label): the whole string is the label.
+    assert checks(check_segment("Save", "存储", glossary=UI_GLOSSARY, content_type="ui"),
+                  "error") == ["ui_label"]
+    assert check_segment("Save", "保存", glossary=UI_GLOSSARY, content_type="ui") == []

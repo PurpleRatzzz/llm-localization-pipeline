@@ -26,12 +26,19 @@ class Unit:
 @dataclass
 class GlossaryEntry:
     """One approved term. Only "required" terms are enforced by the QA gate;
-    "ambiguous" terms are shown to the model as candidates with a usage note."""
+    "ambiguous" terms are shown to the model as candidates with a usage note.
+
+    scope "ui": a UI label, matched against the whole text of a <uicontrol> or
+    <parmname> (docs must cite UI strings exactly). scope "text": a term in
+    running text outside those tags. The same word can need different rules in
+    the two places: the "New" button is 新建, "new features" are 新功能.
+    """
 
     source: str
     target: str
     kind: Literal["required", "ambiguous"] = "required"
     note: str = ""
+    scope: Literal["ui", "text"] = "text"
 
 
 @dataclass

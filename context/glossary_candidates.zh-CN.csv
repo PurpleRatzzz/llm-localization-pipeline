@@ -1,159 +1,274 @@
-source,target,share,hit_rate,train_count,eval_segments,suggested_kind,alternatives
-User,用户,0.98,0.98,47,12,required,简档 (1)
-Select,选择,1.00,0.95,15,10,required,
-Community,社区,1.00,0.92,8,9,required,
-Edit,编辑,0.99,1.00,545,7,required,保存 (2); 自定义入口网站选项卡 (1); 搜索筛选器字段 (1)
-All,所有,0.68,0.93,22,7,ambiguous,全部 (7)
-Enable,启用,1.00,0.95,19,7,required,
-Email,电子邮件,1.00,0.98,47,6,required,
-Create,创建,1.00,0.99,40,6,required,
-Account,客户,0.93,0.94,29,6,required,帐户 (2)
-Page,页面,1.00,0.89,15,6,ambiguous,
-Find,查找,0.80,0.96,15,6,ambiguous,搜索 (2); Find (查找) (1)
-Quick Find,快速查找,0.99,0.99,710,5,required,查找方框 (1); 全局操作 (1); 选项卡 (1)
-New,新建,0.94,0.58,285,5,ambiguous,"新 (10); 新建, (1); New (新建) (1)"
-Add,添加,0.98,0.99,127,5,required,应用程序 (1); 新增 (1)
-Settings,设置,0.98,0.99,66,5,required,Files Connect (1)
-Type,类型,0.97,0.92,37,5,required,阶段 (1)
-Field,字段,1.00,0.77,25,5,ambiguous,
-App,应用程序,1.00,0.88,14,5,ambiguous,
-Site,站点,1.00,0.94,10,5,required,
-Object,对象,1.00,0.97,6,5,required,
-Notifications,通知,1.00,0.98,3,5,required,
-contains,包含,1.00,0.90,3,5,ambiguous,
-Search,搜索,1.00,0.97,37,4,required,
-Setup,设置,0.97,1.00,32,4,required,SalesforceA (1)
-Change,更改,0.90,0.99,21,4,required,字段旁边的 (1); 个案所有人 (1)
-Configure,配置,0.91,1.00,11,4,required,已安装的软件包 (1)
-Available,可用,0.88,0.53,8,4,ambiguous,适用于 (1)
-Record,记录,1.00,1.00,6,4,required,
-Run,运行,0.80,0.99,5,4,ambiguous,上传 (1)
-Save,保存,0.98,0.96,310,3,required,Save (保存) (3); 已启用 (2); 确定 (1)
-Name,名称,0.85,0.72,75,3,ambiguous,姓名 (7); 名 (2); 相关 (1)
-File,文件,0.82,0.94,40,3,ambiguous,File (文件) (4); 我的库中的文件 (1); 上载到我的文件 (1)
-Private,专用,0.90,0.85,20,3,ambiguous,成为专用 (1); 专有 (1)
-Workspace,工作区,0.73,1.00,11,3,ambiguous,管理 (2); Workspace (工作区) (1)
-Manage,管理,0.90,1.00,10,3,required,所有社区 (1)
-Login,登录,1.00,0.95,9,3,required,
-Lead,潜在客户,1.00,0.99,8,3,required,
-Group,组,0.62,0.80,8,3,ambiguous,小组 (3)
-Read,读取,0.71,0.59,7,3,ambiguous,阅读 (2)
-Task,任务,1.00,0.99,7,3,required,
-Community Workspaces,社区工作区,1.00,1.00,6,3,required,
-Content,内容,0.80,0.78,5,3,ambiguous,查看已归档内容 (1)
-Property,属性,1.00,1.00,3,3,required,
-Portal,入口网站,1.00,0.98,3,3,required,
-Sharing,共享,1.00,1.00,37,2,required,
-Refresh,刷新,1.00,1.00,21,2,required,
-More,更多,1.00,0.83,21,2,ambiguous,
-Show,显示,0.95,0.99,19,2,required,我的小组的个案 (1)
-Case,个案,0.94,0.98,16,2,required,来源 (1)
-Debug,调试,0.56,1.00,16,2,ambiguous,Debug (调试) (6); Debug (调试 (1)
-Value,值,1.00,0.98,15,2,required,
-Company,公司,1.00,0.97,15,2,required,
-Tab,选项卡,0.93,0.94,14,2,required,快速查找 (1)
-Report,报表,1.00,0.96,10,2,required,
-Custom,自定义,1.00,0.99,9,2,required,
-Test,测试,0.89,0.99,9,2,ambiguous,Tests (测试) (1)
-Default,默认,0.88,1.00,8,2,ambiguous,默认值 (1)
-Sync,同步,1.00,0.77,7,2,ambiguous,
-Question,问题,1.00,0.95,7,2,required,
-equals,等于,0.86,0.86,7,2,ambiguous,等号 (1)
-Opportunity,业务机会,0.83,0.98,6,2,ambiguous,预测项目 (1)
-Email Notifications,电子邮件通知,1.00,0.93,6,2,required,
-Community Management,社区管理,1.00,1.00,6,2,required,
-Range,范围,1.00,1.00,6,2,required,
-Audience,受众,1.00,0.86,5,2,ambiguous,
-Time,时间,0.75,0.78,4,2,ambiguous,全天 (1)
-Apex Class,Apex 类,1.00,0.98,3,2,required,
-Class,类,1.00,0.97,3,2,required,
-Builder,生成器,1.00,0.72,3,2,ambiguous,
-Feed,摘要,1.00,0.95,3,2,required,
-System,系统,1.00,0.95,3,2,required,
-Document,文档,1.00,0.96,3,2,required,
-Status,状态,0.96,0.97,72,1,required,主题 (1); 完成日期 (1); 优先级 (1)
-Description,描述,0.70,0.79,63,1,ambiguous,备注 (13); 说明 (6)
-Remove,删除,0.95,0.76,61,1,ambiguous,移除 (2); 添加 (1)
-Stage,阶段,0.94,0.94,49,1,required,可能性 (1); 项目开始日期 (1); 预测类别 (1)
-Category,类别,0.57,0.98,40,1,ambiguous,多个类别 (17)
-Amount,金额,0.94,0.81,33,1,ambiguous,Opportunity category (1); 数量 (1)
-Permission Sets,权限集,0.97,1.00,30,1,required,管理用户 (1)
-Profile,简档,0.97,0.96,30,1,required,位置 (1)
-Sharing Setting,共享设置,0.96,1.00,26,1,required,库 (1)
-Customize,自定义,1.00,1.00,26,1,required,
-Contact,联系人,0.96,0.77,24,1,ambiguous,客户 (1)
-Label,标签,1.00,1.00,23,1,required,
-Apply,应用,1.00,0.77,20,1,ambiguous,
-Library,库,0.89,0.99,19,1,ambiguous,添加 Google 文档 (1); 共享设置 (1)
-Publish,发布,0.94,0.99,18,1,required,取消发布 (1)
-Save As,另存为,0.89,0.90,18,1,ambiguous,保存为 (1); 文件 (1)
-Record Type,记录类型,1.00,0.99,17,1,required,
-System Permissions,系统权限,0.88,0.97,16,1,ambiguous,系统权限集 (1); 编辑 (1)
-Dashboard,仪表板,1.00,1.00,15,1,required,
-Submit,提交,1.00,1.00,15,1,required,
-Username,用户名,1.00,0.97,15,1,required,
-Start,开始,0.79,0.74,14,1,ambiguous,启动 (3)
-Update,更新,1.00,1.00,14,1,required,
-Go!,执行!,0.85,0.85,13,1,ambiguous,执行 (1); 搜索! (1)
-Language,语言,1.00,0.94,13,1,required,
-Package,软件包,0.92,0.93,13,1,required,封装 (1)
-Assign,分配,1.00,0.98,13,1,required,
-Yes,是,0.92,0.95,13,1,required,“是” (1)
-Connected App,连接的应用程序,1.00,0.93,12,1,required,
-Role,角色,1.00,0.99,12,1,required,
-Created By,创建人,0.83,0.91,12,1,ambiguous,创建者 (2)
-Territory,区域,1.00,0.99,12,1,required,
-Discount,折扣,1.00,1.00,10,1,required,
-Set Up,设置,1.00,1.00,9,1,required,
-Campaign,市场活动,0.89,0.99,9,1,ambiguous,活动 (1)
-Clear,清除,0.78,0.97,9,1,ambiguous,Clear (清除) (2)
-Action,操作,1.00,0.98,9,1,required,
-Flow,流,0.75,1.00,8,1,ambiguous,流程 (2)
-Quantity,数量,1.00,0.98,8,1,required,
-Member,成员,1.00,1.00,8,1,required,
-Submit for Approval,提交待批准,0.88,0.81,8,1,ambiguous,提交以待批准 (1)
-Recommendations,推荐,0.88,0.88,8,1,ambiguous,建议 (1)
-Subscribe,订阅,0.86,0.84,7,1,ambiguous,订购 (1)
-Dataset,数据集,1.00,0.99,7,1,required,
-Export,导出,1.00,0.97,7,1,required,
-Content Targeting,内容定向,0.57,0.56,7,1,ambiguous,针对 (3)
-Communities Settings,社区设置,1.00,1.00,7,1,required,
-Externally Available Image,外部可用图像,1.00,1.00,6,1,required,
-Hierarchy,层次结构,1.00,0.98,6,1,required,
-Resume,恢复,1.00,1.00,6,1,required,
-Publish...,发布...,0.83,0.83,6,1,ambiguous,出版... (1)
-Generate,生成,0.83,1.00,6,1,ambiguous,生产 (1)
-Transfer,转移,1.00,0.94,6,1,required,
-User License,用户许可证,1.00,0.91,5,1,required,
-Image,图像,1.00,0.97,5,1,required,
-Public,公用,0.80,0.65,5,1,ambiguous,公共 (1)
-Formula,公式,1.00,0.99,5,1,required,
-Google Apps Settings,Google 企业应用套件设置,1.00,1.00,5,1,required,
-Related Lists,相关列表,1.00,1.00,5,1,required,
-Articles,文章,1.00,0.99,5,1,required,
-Email to Salesforce,电子邮件至 Salesforce,1.00,0.89,5,1,ambiguous,
-Install,安装,1.00,0.99,5,1,required,
-Location,位置,0.75,0.94,4,1,ambiguous,用户 (1)
-Deselect,取消选择,1.00,0.73,4,1,ambiguous,
-Person Account,个人客户,1.00,1.00,4,1,required,
-Unrestricted,不受限,0.50,1.00,4,1,ambiguous,不受限制的 (1); 不受限制 (1)
-Tools,工具,1.00,0.98,4,1,required,
-Triggers,触发器,1.00,0.88,4,1,ambiguous,
-Search Results,搜索结果,1.00,1.00,4,1,required,
-People,人员,1.00,0.78,4,1,ambiguous,
-Merge,合并,1.00,0.99,4,1,required,
-Visibility,可见性,1.00,0.93,4,1,required,
-Template,模板,1.00,1.00,4,1,required,
-Average,平均,0.67,0.99,3,1,ambiguous,平均值 (1)
-Shipping Address,发货地址,0.67,0.62,3,1,ambiguous,收货地址 (1)
-Service Resource,服务资源,1.00,0.99,3,1,required,
-Fiscal Year,会计年度,1.00,0.98,3,1,required,
-Service Appointment,服务预约,1.00,0.99,3,1,required,
-Options,选项,1.00,1.00,3,1,required,
-Discount Percent,折扣百分比,1.00,1.00,3,1,required,
-Externally Available,外部可用,1.00,1.00,3,1,required,
-My Email to Salesforce,我的电子邮件至 Salesforce,1.00,1.00,3,1,required,
-Revenue,收入,1.00,0.97,3,1,required,
-Recipient,收件人,0.67,0.89,3,1,ambiguous,接收者 (1)
-Received Connection Name,收到的连接名称,1.00,0.83,3,1,ambiguous,
-Campaign Member Type,市场活动成员类型,1.00,1.00,3,1,required,
+scope,source,target,kind,review,tag_share,hit_rate,dice,train_count,eval_segments,alternatives
+ui,Edit,编辑,required,auto,0.99,,,545,6,保存 (2); 自定义入口网站选项卡 (1); 搜索筛选器字段 (1)
+ui,New,新建,required,todo,0.94,,,285,3,"新 (10); 新建, (1); New (新建) (1)"
+ui,Quick Find,快速查找,required,auto,0.99,,,710,2,查找方框 (1); 全局操作 (1); 选项卡 (1)
+ui,Save,保存,required,auto,0.98,,,310,2,Save (保存) (3); 已启用 (2); 确定 (1)
+ui,Value,值,required,auto,1.00,,,15,2,
+ui,Add,添加,required,auto,0.98,,,127,1,应用程序 (1); 新增 (1)
+ui,Remove,删除,required,auto,0.95,,,61,1,移除 (2); 添加 (1)
+ui,Next,下一步,required,todo,0.95,,,119,1,下一页 (4); 新建 (1); 下一组 (1)
+ui,Go!,执行!,ambiguous,todo,0.85,,,13,1,执行 (1); 搜索! (1)
+ui,Search,搜索,required,auto,1.00,,,37,1,
+ui,Amount,金额,required,todo,0.94,,,33,1,Opportunity category (1); 数量 (1)
+ui,More,更多,required,auto,1.00,,,21,1,
+ui,File,文件,ambiguous,todo,0.82,,,40,1,File (文件) (4); 我的库中的文件 (1); 上载到我的文件 (1)
+ui,Person Account,个人客户,required,todo,1.00,,,4,1,
+ui,App,应用程序,required,auto,1.00,,,14,1,
+ui,Externally Available Image,外部可用图像,required,todo,1.00,,,6,1,
+ui,Debug,调试,ambiguous,todo,0.56,,,16,1,Debug (调试) (6); Debug (调试 (1)
+ui,Unrestricted,不受限,ambiguous,todo,0.50,,,4,1,不受限制的 (1); 不受限制 (1)
+ui,Record,记录,required,todo,1.00,,,6,1,
+ui,Update,更新,required,auto,1.00,,,14,1,
+ui,Audience,受众,required,todo,1.00,,,5,1,
+ui,Test,测试,ambiguous,todo,0.89,,,9,1,Tests (测试) (1)
+ui,Object,对象,required,todo,1.00,,,6,1,
+ui,Content Targeting,内容定向,ambiguous,todo,0.57,,,7,1,针对 (3)
+ui,Tools,工具,required,todo,1.00,,,4,1,
+ui,Generate,生成,ambiguous,todo,0.83,,,6,1,生产 (1)
+ui,Task,任务,required,todo,1.00,,,7,1,
+ui,Discount Percent,折扣百分比,required,todo,1.00,,,3,1,
+ui,Recommendations,推荐,ambiguous,todo,0.88,,,8,1,建议 (1)
+ui,Content,内容,ambiguous,todo,0.80,,,5,1,查看已归档内容 (1)
+ui,Feed,摘要,required,todo,1.00,,,3,1,
+ui,Campaign Member Type,市场活动成员类型,required,todo,1.00,,,3,1,
+text,report,报表,required,todo,,0.94,0.86,2921,12,
+text,account,客户,ambiguous,todo,,0.86,0.52,3247,10,
+text,case,个案,ambiguous,todo,,0.87,0.78,2313,7,
+text,dashboard,仪表板,required,auto,,1.00,0.85,1498,6,
+text,Service,服务,ambiguous,todo,,0.61,0.27,887,5,
+text,Data,数据,ambiguous,todo,,0.80,0.13,582,5,使用 (hit 0.31)
+text,contact,联系人,ambiguous,todo,,0.88,0.82,2252,4,客户 (hit 0.55)
+text,opportunity,业务机会,required,auto,,0.99,0.86,1906,4,客户 (hit 0.32)
+text,Account,客户,required,todo,,0.95,0.25,1115,4,
+text,drop-down list,下拉列表,required,auto,,0.98,0.78,293,4,拉列表中 (hit 0.59); 下拉列表中 (hit 0.59); 列表中选 (hit 0.38)
+text,product,产品,required,auto,,1.00,0.86,1074,4,
+text,lead,潜在客户,required,auto,,0.97,0.82,1322,3,联系人 (hit 0.39); 系人 (hit 0.39); 联系 (hit 0.40)
+text,forecast,预测,required,auto,,1.00,0.73,636,3,的预测 (hit 0.35); 的预 (hit 0.36); 务机会 (hit 0.34)
+text,related list,相关列表,required,auto,,0.99,0.86,987,3,相关列表中 (hit 0.38); 关列表中 (hit 0.38); 列表中 (hit 0.39)
+text,Community Workspaces,社区工作区,required,auto,,1.00,0.98,129,3,区管理 (hit 0.81); 区管 (hit 0.81); 社区管理 (hit 0.79)
+text,entitlement,权利,required,auto,,0.97,0.82,355,3,权利过程 (hit 0.38); 权利过 (hit 0.38); 利过程 (hit 0.38)
+text,Developer Console,开发人员控制台,ambiguous,todo,,0.85,0.92,108,3,
+text,Properties pane,窗格中,ambiguous,todo,,0.50,0.38,52,3,属性 (hit 1.00); 页面 (hit 0.48); 中的 (hit 0.35)
+text,event,事件,required,auto,,0.98,0.77,1053,2,
+text,Community,社区,ambiguous,todo,,0.88,0.25,544,2,页面 (hit 0.28); 使用 (hit 0.32)
+text,Make sure,请确保,ambiguous,todo,,0.59,0.51,286,2,确保您 (hit 0.35); 保您 (hit 0.35)
+text,Opportunity,业务机会,required,todo,,0.98,0.45,731,2,
+text,Case,个案,required,auto,,0.98,0.56,1136,2,
+text,Setup,框中输入,ambiguous,todo,,0.55,0.58,1154,2,然后选择 (hit 0.49); 然后选 (hit 0.49); 后选择 (hit 0.49)
+text,public group,公用小组,ambiguous,todo,,0.77,0.56,60,2,用户 (hit 0.48)
+text,task,任务,required,auto,,0.99,0.86,786,2,
+text,Quick Find box,快速查找,required,auto,,0.99,0.89,347,2,框中输 (hit 0.83); 框中输入 (hit 0.83); 框中 (hit 0.95)
+text,detail page,详细信息页,required,todo,,0.93,0.84,790,2,详细信息页面 (hit 0.62); 细信息页面 (hit 0.62); 信息页面 (hit 0.62)
+text,Lead,潜在客户,required,todo,,0.99,0.47,563,2,
+text,order,订单,ambiguous,todo,,0.58,0.67,1251,2,工作订单 (hit 0.42); 工作订 (hit 0.42); 作订单 (hit 0.42)
+text,Mobile,移动,ambiguous,todo,,0.68,0.20,242,2,应用程序 (hit 0.47); 应用程 (hit 0.47); 用程序 (hit 0.47)
+text,Report,报表,required,todo,,0.97,0.41,944,2,
+text,Available,可用,required,todo,,0.99,0.07,101,2,列表 (hit 0.42); 单击 (hit 0.36); 选择 (hit 0.47)
+text,change sets,更改集,required,todo,,0.99,0.49,73,2,部署 (hit 0.47); 组织 (hit 0.40); 数据 (hit 0.30)
+text,Email,电子邮件,required,todo,,0.98,0.17,321,2,发送 (hit 0.33); 操作 (hit 0.32); 使用 (hit 0.33)
+text,data service,数据服务,required,auto,,1.00,0.78,36,2,数据服务中 (hit 0.36); 务中 (hit 0.36); 匹配 (hit 0.42)
+text,Entitlement,权利,required,todo,,0.95,0.53,186,2,过程 (hit 0.30)
+text,Task,任务,required,todo,,0.99,0.38,242,2,
+text,Object,对象,required,todo,,0.93,0.05,122,2,字段 (hit 0.31)
+text,custom field,自定义字段,required,auto,,0.97,0.59,280,2,的自定义字段 (hit 0.32); 的自定义字 (hit 0.32); 的自定义 (hit 0.34)
+text,approval process,批准过程,ambiguous,todo,,0.89,0.66,184,2,
+text,asset,资产,required,auto,,0.99,0.87,434,2,
+text,Site,站点,required,todo,,0.94,0.14,102,2,页面 (hit 0.40)
+text,personal settings,个人设置,required,auto,,1.00,0.95,116,2,人设置中 (hit 0.46); 个人设置中 (hit 0.46); 设置中 (hit 0.46)
+text,Closed Won,已结束并赢得,ambiguous,todo,,0.82,0.56,40,2,
+text,Enhanced Email,增强电子邮件,required,auto,,1.00,1.00,38,2,
+text,select multiple,选择多个,required,todo,,0.92,0.68,25,2,选择多个字段 (hit 0.32); 选择多个字 (hit 0.32); 多个字 (hit 0.32)
+text,Community Management,社区管理,required,auto,,0.99,0.78,163,2,社区工作区 (hit 0.62); 社区工作 (hit 0.62); 社区工 (hit 0.62)
+text,Files,文件,required,todo,,0.91,0.09,165,2,
+text,default value,默认值,required,auto,,1.00,0.64,127,2,字段 (hit 0.46); 使用 (hit 0.31)
+text,lookup icon,查找图标,required,auto,,1.00,1.00,30,2,单击查找图标 (hit 0.53); 单击查找图 (hit 0.53); 击查找图标 (hit 0.53)
+text,entitlement process,权利过程,required,auto,,0.98,0.76,105,2,权利过程的 (hit 0.41); 利过程的 (hit 0.41); 过程的 (hit 0.41)
+text,Work,工作订单,ambiguous,todo,,0.69,0.20,112,2,项目 (hit 0.37); 服务 (hit 0.33)
+text,Manage,管理,required,todo,,1.00,0.04,86,2,权限 (hit 0.56); 用户 (hit 0.53); 创建 (hit 0.31)
+text,Omni-Channel,全渠道,ambiguous,todo,,0.86,0.76,179,2,路由 (hit 0.40); 服人员 (hit 0.53); 服人 (hit 0.53)
+text,Developer Guide,开发人员指南,required,auto,,0.99,0.77,77,2,
+text,Pages,页面,ambiguous,todo,,0.88,0.02,67,2,选择 (hit 0.31)
+text,username and password,用户名和密码,required,auto,,0.99,0.89,69,2,
+text,total amount,总金额,ambiguous,todo,,0.63,0.48,27,2,务机会 (hit 0.37); 业务机会 (hit 0.37); 业务机 (hit 0.37)
+text,assignment rule,分配规则,required,todo,,1.00,0.28,32,2,户分配规则 (hit 0.47); 户分配规 (hit 0.47); 客户分配规 (hit 0.47)
+text,Viewer,查看者,ambiguous,todo,,0.52,0.40,23,2,文件夹 (hit 0.39); 问权限 (hit 0.57); 访问权限 (hit 0.57)
+text,date range,日期范围,required,auto,,0.97,0.80,33,2,的日期范围 (hit 0.36); 的日期范 (hit 0.36); 的日期 (hit 0.39)
+text,Size,大小,ambiguous,todo,,0.70,0.07,27,2,数据 (hit 0.33); 字段 (hit 0.37)
+text,person account,个人客户,required,todo,,0.99,0.44,125,1,联系人 (hit 0.51); 系人 (hit 0.51); 联系 (hit 0.51)
+text,Builder,生成器,ambiguous,todo,,0.72,0.65,376,1,社区生成器 (hit 0.34); 区生成器 (hit 0.34); 社区生成 (hit 0.34)
+text,organization uses,组织使用,required,todo,,0.91,0.68,120,1,的组织使 (hit 0.51); 您的组织 (hit 0.53); 您的组 (hit 0.53)
+text,sales rep,销售代表,required,todo,,1.00,0.31,42,1,务机会 (hit 0.31); 业务机会 (hit 0.31); 业务机 (hit 0.31)
+text,campaign,市场活动,required,auto,,0.96,0.82,612,1,
+text,User,用户,required,todo,,0.97,0.08,478,1,权限 (hit 0.32)
+text,global search,全局搜索,required,auto,,0.96,0.77,90,1,用全局搜索 (hit 0.33); 用全局搜 (hit 0.33); 使用全局 (hit 0.32)
+text,Contact,联系人,ambiguous,todo,,0.76,0.41,996,1,客户 (hit 0.37)
+text,Custom,自定义,required,todo,,0.98,0.05,166,1,
+text,Create,创建,required,todo,,0.96,0.05,229,1,记录 (hit 0.33)
+text,permission sets,权限集,required,auto,,0.99,0.51,347,1,简档 (hit 0.52); 分配 (hit 0.31); 访问 (hit 0.31)
+text,Articles,文章,required,todo,,0.98,0.10,90,1,项卡 (hit 0.31); 选项卡 (hit 0.31); 选项 (hit 0.32)
+text,posts and comments,帖子和留言,required,todo,,0.95,0.87,117,1,的帖子和留言 (hit 0.31); 的帖子和留 (hit 0.31); 的帖子和 (hit 0.31)
+text,Content,内容,ambiguous,todo,,0.64,0.13,231,1,文件 (hit 0.46)
+text,close date,结束日期,ambiguous,todo,,0.87,0.46,68,1,务机会 (hit 0.81); 业务机会 (hit 0.81); 业务机 (hit 0.81)
+text,Connected Apps,接的应用程序,required,todo,,0.91,0.14,45,1,连接的应用程 (hit 0.91); 连接的应 (hit 0.91); 连接的 (hit 0.91)
+text,Portal users,入口网站用户,required,todo,,0.95,0.35,55,1,
+text,results include,结果包,ambiguous,todo,,0.52,0.59,23,1,结果包括 (hit 0.35); 果包括 (hit 0.35); 索结果 (hit 0.52)
+text,external objects,外部对象,required,auto,,0.99,0.62,178,1,自定义 (hit 0.33); 自定 (hit 0.33); 数据 (hit 0.33)
+text,record type,记录类型,required,auto,,0.99,0.65,302,1,
+text,page layout,页面布局,required,auto,,0.98,0.69,662,1,添加 (hit 0.30); 字段 (hit 0.33)
+text,quotation marks,引号,required,todo,,1.00,0.52,20,1,搜索 (hit 0.40); 例如 (hit 0.35); 如果 (hit 0.30)
+text,validation rules,验证规则,required,auto,,1.00,0.73,175,1,字段 (hit 0.59); 自定义 (hit 0.38); 自定 (hit 0.38)
+text,authentication provider,验证提供商,required,todo,,0.93,0.69,120,1,使用 (hit 0.42)
+text,mobile browser,移动浏览器,required,auto,,0.97,0.81,32,1,支持 (hit 0.50); 应用程序 (hit 0.50); 程序 (hit 0.53)
+text,external system,外部系统,required,auto,,1.00,0.84,90,1,数据 (hit 0.39); 如果 (hit 0.32)
+text,Scheduled,计划,required,todo,,1.00,0.03,24,1,作业 (hit 0.38)
+text,History,历史,required,todo,,1.00,0.44,185,1,相关列表 (hit 0.51); 相关列 (hit 0.51); 关列表 (hit 0.51)
+text,work item,工作项目,required,auto,,0.99,0.65,81,1,服人员 (hit 0.63); 服人 (hit 0.63); 客服人员 (hit 0.63)
+text,dropdown list,下拉列表中,ambiguous,todo,,0.64,0.30,80,1,列表中选 (hit 0.30); 表中选择 (hit 0.30); 中选择 (hit 0.33)
+text,security settings,安全设,ambiguous,todo,,0.54,0.64,129,1,全设置 (hit 0.54); 段级安全 (hit 0.64); 段级安 (hit 0.64)
+text,Custom Object,自定义对象,required,todo,,1.00,0.10,43,1,
+text,Login,登录,required,todo,,0.92,0.10,114,1,页面 (hit 0.36); 用户 (hit 0.51); 设置 (hit 0.34)
+text,data source,数据源,required,auto,,0.99,0.74,198,1,部数据源 (hit 0.69); 外部数据源 (hit 0.69); 外部数据 (hit 0.69)
+text,custom object,自定义对象,required,auto,,1.00,0.64,403,1,记录 (hit 0.34)
+text,Dashboard,仪表板,required,todo,,1.00,0.47,617,1,
+text,App,应用程序,required,todo,,0.94,0.18,467,1,使用 (hit 0.31)
+text,Related Lists,相关列表,required,todo,,1.00,0.05,35,1,
+text,existing records,现有记录,required,auto,,0.98,0.75,45,1,匹配 (hit 0.40); 更新 (hit 0.38); 如果 (hit 0.38)
+text,search results,搜索结果,required,auto,,0.99,0.86,366,1,索结果中 (hit 0.31); 搜索结果中 (hit 0.31); 结果中 (hit 0.32)
+text,contract,合同,required,auto,,0.97,0.83,372,1,服务合同 (hit 0.44); 服务合 (hit 0.44); 务合同 (hit 0.44)
+text,case feed,个案摘要,required,todo,,0.97,0.48,76,1,案摘要中 (hit 0.42); 个案摘要中 (hit 0.42); 要中 (hit 0.45)
+text,activity timeline,活动时间线,required,todo,,0.92,0.84,37,1,间线中 (hit 0.46); 时间线中 (hit 0.46); 活动时间线中 (hit 0.43)
+text,detailed information,的详细信息,ambiguous,todo,,0.84,0.14,45,1,有关 (hit 0.49); 查看 (hit 0.40); 单击 (hit 0.33)
+text,console app,制台应用程序,required,auto,,0.95,0.60,60,1,控制台应用程 (hit 0.95); 控制台应用 (hit 0.95); 控制台应 (hit 0.95)
+text,standard objects,标准对象,required,auto,,1.00,0.69,93,1,自定义对象 (hit 0.49); 自定义对 (hit 0.49); 定义对象 (hit 0.49)
+text,routing configuration,路由配置,required,auto,,1.00,0.86,30,1,工作项目 (hit 0.37); 队列 (hit 0.63); 服人员 (hit 0.47)
+text,email notification,电子邮件通知,required,auto,,0.99,0.59,96,1,
+text,custom links,自定义链接,required,auto,,0.98,0.66,61,1,页面 (hit 0.38); 字段 (hit 0.31)
+text,Groups,小组,ambiguous,todo,,0.85,0.07,82,1,管理 (hit 0.39); 权限 (hit 0.32); 列表 (hit 0.30)
+text,turn off,关闭,required,todo,,0.98,0.19,47,1,
+text,article type,文章类型,required,auto,,0.98,0.65,131,1,文章类型的 (hit 0.31); 章类型的 (hit 0.31); 类型的 (hit 0.33)
+text,service resource,服务资源,required,auto,,0.98,0.52,113,1,的服务 (hit 0.36); 的服 (hit 0.36)
+text,field-level security settings,字段级安全,required,auto,,0.95,0.51,82,1,页面布 (hit 0.74); 面布局 (hit 0.74); 布局 (hit 0.76)
+text,management settings,管理设置,required,auto,,0.99,0.86,116,1,管理设置中 (hit 0.54); 理设置中 (hit 0.54); 象管 (hit 0.53)
+text,Access,访问权限,ambiguous,todo,,0.58,0.07,105,1,设置 (hit 0.38); 用户 (hit 0.45)
+text,Guest User,来宾用户简档,ambiguous,todo,,0.50,0.38,26,1,站点 (hit 0.54)
+text,mobile device,移动设备,required,auto,,1.00,0.71,163,1,移动设备上 (hit 0.41); 动设备上 (hit 0.41); 设备上 (hit 0.45)
+text,price book,价格手册,required,auto,,0.99,0.75,138,1,产品 (hit 0.60)
+text,configuration wizard,配置向导,required,auto,,1.00,0.84,39,1,应用程序 (hit 0.46); 应用程 (hit 0.46); 用程序 (hit 0.46)
+text,Status,状态,required,todo,,0.98,0.15,115,1,字段 (hit 0.34)
+text,Edit,编辑,required,todo,,1.00,0.07,142,1,权限 (hit 0.38)
+text,formula field,公式字段,required,auto,,0.96,0.55,74,1,自定义 (hit 0.35); 自定 (hit 0.35); 定义 (hit 0.36)
+text,primary account,联系人的主,ambiguous,todo,,0.70,0.76,20,1,主要客户 (hit 0.70); 主要客 (hit 0.70); 要客户 (hit 0.70)
+text,Code,代码,ambiguous,todo,,0.85,0.10,55,1,编辑 (hit 0.31); 使用 (hit 0.31)
+text,service provider,服务提供商,required,auto,,0.96,0.83,134,1,身份 (hit 0.40); 登录 (hit 0.46); 应用 (hit 0.36)
+text,accounts and contacts,客户和联系人,required,todo,,0.90,0.46,50,1,
+text,filter criteria,筛选条件,ambiguous,todo,,0.83,0.75,133,1,记录 (hit 0.34); 字段 (hit 0.31); 如果 (hit 0.30)
+text,target object,目标对象,required,auto,,1.00,0.87,70,1,源报 (hit 0.40); 源报表 (hit 0.39); 快照 (hit 0.36)
+text,object management settings,对象管理设置,required,auto,,0.98,0.94,60,1,
+text,Permission Sets,权限集,required,todo,,1.00,0.19,106,1,设置 (hit 0.37); 选择 (hit 0.30)
+text,closed won,已结束并赢得,required,todo,,0.91,0.65,43,1,
+text,Won,并赢得,ambiguous,todo,,0.78,0.42,32,1,得客户 (hit 0.75); 得客 (hit 0.75); 已结束 (hit 0.78)
+text,Administrator,系统管理员,ambiguous,todo,,0.72,0.46,29,1,管理员简 (hit 0.52); 理员简档 (hit 0.52); 简档 (hit 0.66)
+text,linked organization,到已链接,ambiguous,todo,,0.53,0.65,38,1,链接组织 (hit 0.50); 链接的组 (hit 0.47); 接组织 (hit 0.53)
+text,default text,默认文本是,required,todo,,0.93,0.90,61,1,的文本 (hit 0.43); 的标 (hit 0.34); 的文 (hit 0.43)
+text,joined reports,已结合报表,ambiguous,todo,,0.74,0.55,39,1,汇总 (hit 0.31); 创建 (hit 0.33); 使用 (hit 0.33)
+text,current month,当前月,ambiguous,todo,,0.50,0.65,22,1,当月 (hit 0.41); 于当 (hit 0.41); 月的 (hit 0.32)
+text,portal users,入口网站用户,required,auto,,0.97,0.71,139,1,
+text,field type,字段类型,required,auto,,0.97,0.66,103,1,
+text,Language,语言,required,todo,,0.91,0.14,56,1,选择 (hit 0.39); 使用 (hit 0.41)
+text,View All Data,查看所有数据,required,auto,,1.00,0.96,61,1,
+text,sharing settings,共享设置,required,auto,,1.00,0.77,99,1,的共享设置 (hit 0.34); 的共享设 (hit 0.34); 的共享 (hit 0.37)
+text,sharing rules,共享规则,required,auto,,0.99,0.76,244,1,用户 (hit 0.36)
+text,internal users,内部用户,required,auto,,1.00,0.79,64,1,的内部 (hit 0.31); 外部用户 (hit 0.31); 外部用 (hit 0.31)
+text,community users,社区用户,required,auto,,1.00,0.59,79,1,
+text,lookup search,查找搜索,required,auto,,0.97,0.67,32,1,搜索结果 (hit 0.41); 搜索结 (hit 0.41); 索结果 (hit 0.41)
+text,search term,搜索词,required,todo,,0.94,0.52,70,1,的搜索 (hit 0.33); 的搜 (hit 0.33); 结果 (hit 0.46)
+text,Fields,字段,required,todo,,0.99,0.04,175,1,
+text,Name,名称,ambiguous,todo,,0.84,0.11,202,1,字段 (hit 0.53)
+text,Connection,连接,required,todo,,1.00,0.04,40,1,详细信息 (hit 0.33); 详细信 (hit 0.33); 细信息 (hit 0.33)
+text,Search Results,搜索结果,required,todo,,1.00,0.24,67,1,
+text,Enable,启用,required,todo,,1.00,0.02,48,1,选择 (hit 0.38); 用户 (hit 0.33)
+text,user detail page,用户详细信息,ambiguous,todo,,0.89,0.64,35,1,详细信息页 (hit 0.89); 信息页 (hit 0.89)
+text,Crew,班组的,ambiguous,todo,,0.57,0.54,42,1,服务班组 (hit 0.74); 服务班 (hit 0.74); 务班组 (hit 0.74)
+text,Keep these considerations,这些注意事项,required,todo,,0.91,0.58,23,1,
+text,Service Resource,服务资源,required,todo,,1.00,0.35,67,1,的服务资源 (hit 0.34); 的服务资 (hit 0.34); 班组 (hit 0.34)
+text,escalation rules,升级规则,required,auto,,1.00,0.63,31,1,自动 (hit 0.48); 工作 (hit 0.48); 分配 (hit 0.52)
+text,field service,现场服务,required,auto,,0.95,0.92,127,1,工作 (hit 0.43)
+text,select the checkbox,复选框,required,todo,,1.00,0.27,77,1,选中 (hit 0.61); 选择 (hit 0.53); 如果 (hit 0.36)
+text,email alert,电子邮件报警,ambiguous,todo,,0.66,0.57,44,1,
+text,default settings,默认设置,required,todo,,1.00,0.28,42,1,的默认 (hit 0.36); 的默 (hit 0.36); 组织 (hit 0.31)
+text,required fields,必填字段,required,todo,,0.91,0.61,65,1,
+text,specific user,特定用户,ambiguous,todo,,0.86,0.55,28,1,所有 (hit 0.39); 如果 (hit 0.36); 可以 (hit 0.32)
+text,article actions,文章操作,required,todo,,1.00,0.75,20,1,公用小组 (hit 0.50); 公用小 (hit 0.50); 用小组 (hit 0.50)
+text,compact layout,紧凑布局,required,todo,,0.93,0.75,59,1,的紧凑布局 (hit 0.32); 的紧凑布 (hit 0.32); 的紧凑 (hit 0.32)
+text,library permission,库权限,required,auto,,0.97,0.73,35,1,的库权限 (hit 0.43); 的库权 (hit 0.43); 限定义 (hit 0.37)
+text,maximum size,最大大小,required,todo,,0.94,0.86,32,1,的最大大小 (hit 0.53); 的最大大 (hit 0.53); 的最大 (hit 0.59)
+text,primary object,主对象,ambiguous,todo,,0.61,0.45,49,1,报表类型 (hit 0.63); 报表类 (hit 0.63); 义报表 (hit 0.51)
+text,Test,测试,required,todo,,0.97,0.10,32,1,页面 (hit 0.41)
+text,External Data,外部数据,required,todo,,0.99,0.35,77,1,部数据源 (hit 0.56); 外部数据源 (hit 0.56); 数据源 (hit 0.57)
+text,member criteria,成员条件,ambiguous,todo,,0.60,0.73,25,1,成员标准 (hit 0.36); 员标准 (hit 0.36); 成员标 (hit 0.36)
+text,Read,读取,ambiguous,todo,,0.64,0.22,112,1,问权限 (hit 0.39); 访问权限 (hit 0.39); 问权 (hit 0.39)
+text,license types,许可证类型,required,todo,,0.91,0.53,22,1,用户许 (hit 0.68); 户许可证 (hit 0.68); 户许可 (hit 0.68)
+text,user license,用户许可证,required,auto,,0.97,0.56,87,1,
+text,product request,产品请求,required,auto,,1.00,0.69,50,1,品请求行项 (hit 0.62); 产品请求行项目 (hit 0.62); 产品请求行项 (hit 0.62)
+text,user permission,用户权限,required,todo,,0.99,0.42,77,1,的用户 (hit 0.32); 的用 (hit 0.32)
+text,Service Appointments,服务预约,required,todo,,1.00,0.21,50,1,计划 (hit 0.30)
+text,Create custom,创建自定义,ambiguous,todo,,0.80,0.15,45,1,用户 (hit 0.42); 可以 (hit 0.31)
+text,vice versa,反之亦然,ambiguous,todo,,0.90,0.84,29,1,更改 (hit 0.52); 类型 (hit 0.31); 可以 (hit 0.45)
+text,access level,访问权限级别,ambiguous,todo,,0.72,0.56,58,1,
+text,click the name,的名称,ambiguous,todo,,0.68,0.11,56,1,框中输入 (hit 0.39); 框中输 (hit 0.39); 然后选择 (hit 0.34)
+text,data integration rules,数据集成规则,required,todo,,1.00,0.53,27,1,
+text,dashboard folders,仪表板文件夹,required,todo,,1.00,0.59,26,1,
+text,push notifications,推送通知,required,auto,,1.00,0.74,57,1,应用程序 (hit 0.33); 应用程 (hit 0.33); 程序 (hit 0.35)
+text,User Profile,用户简档,required,todo,,0.99,0.23,73,1,组件 (hit 0.41)
+text,save the record,保存记录,required,todo,,0.95,0.64,20,1,录中 (hit 0.35); 错误 (hit 0.40); 验证 (hit 0.35)
+text,Administrator profile,管理员简档,ambiguous,todo,,0.89,0.74,28,1,统管理员 (hit 0.93); 系统管理员 (hit 0.93); 统管理 (hit 0.93)
+text,customer portal,客户入口网站,required,todo,,0.97,0.21,39,1,
+text,picklist fields,选项列表字段,required,todo,,0.95,0.50,42,1,
+text,chart displays,记录计数,ambiguous,todo,,0.50,0.43,20,1,显示一 (hit 0.60); 示一 (hit 0.60); 报表中 (hit 0.70)
+text,Public Read,公用读,ambiguous,todo,,0.59,0.74,34,1,织范围 (hit 0.47); 织范 (hit 0.47); 组织范 (hit 0.47)
+text,Public,公用,ambiguous,todo,,0.70,0.24,83,1,权限 (hit 0.41); 访问 (hit 0.37); 组织 (hit 0.31)
+text,click the tab,选项卡,required,todo,,1.00,0.03,39,1,单击 (hit 1.00); 页面 (hit 0.33); 选择 (hit 0.36)
+text,custom setting,自定义设置,required,todo,,1.00,0.45,43,1,设置的 (hit 0.33); 置的 (hit 0.33); 字段 (hit 0.40)
+text,lets you add,在允许,ambiguous,todo,,0.67,0.62,36,1,添加到 (hit 0.89); 加到 (hit 0.89); 添加 (hit 0.97)
+text,Schema Builder,方案生成器,required,todo,,0.92,0.96,39,1,对象 (hit 0.51); 自定义 (hit 0.49); 自定 (hit 0.49)
+text,matrix reports,矩阵报表,ambiguous,todo,,0.88,0.73,32,1,和矩阵 (hit 0.56); 和矩 (hit 0.56); 和矩阵报表 (hit 0.44)
+text,Overview tab,概览,required,todo,,1.00,0.25,41,1,项卡上 (hit 0.54); 选项卡上 (hit 0.54); 卡上 (hit 0.54)
+text,Tab,选项卡,ambiguous,todo,,0.72,0.03,50,1,选择 (hit 0.32); 使用 (hit 0.38)
+text,multi-select picklist,多选选项列表,ambiguous,todo,,0.85,0.78,47,1,
+text,layout and field-level,页面布局和,required,auto,,1.00,0.63,43,1,段级安全 (hit 1.00); 段级安 (hit 1.00); 字段级安全 (hit 1.00)
+text,Service Territories,服务区域,required,todo,,0.96,0.28,28,1,资源 (hit 0.36)
+text,System Permissions,系统权限,required,todo,,1.00,0.67,20,1,单击 (hit 0.30); 用户 (hit 0.45)
+text,Record Type,记录类型,required,todo,,1.00,0.18,59,1,
+text,forecast category,预测类别,required,todo,,0.93,0.67,29,1,阶段 (hit 0.41); 金额 (hit 0.38); 务机会 (hit 0.76)
+text,edit page,编辑页面,ambiguous,todo,,0.88,0.57,76,1,辑页面上 (hit 0.43); 编辑页面上 (hit 0.43); 页面上 (hit 0.43)
+text,records associated,关联的记录,ambiguous,todo,,0.59,0.38,29,1,相关联 (hit 0.41); 记录的 (hit 0.41); 录的 (hit 0.41)
+text,change the value,更改,required,todo,,1.00,0.02,24,1,的值 (hit 0.67); 字段 (hit 0.50); 可以 (hit 0.38)
+text,code coverage,代码覆盖,required,todo,,1.00,0.88,22,1,码覆盖率 (hit 0.86); 代码覆盖率 (hit 0.86); 覆盖率 (hit 0.86)
+text,select and click,框中输入,ambiguous,todo,,0.71,0.03,24,1,并单击 (hit 0.67); 并单 (hit 0.67); 然后选择 (hit 0.67)
+text,internal org,内部组织中,ambiguous,todo,,0.52,0.61,21,1,区中 (hit 0.38); 社区 (hit 0.86); 中的 (hit 0.33)
+text,permission set licenses,权限集许可证,required,todo,,1.00,0.41,37,1,
+text,private group,专用小组,required,todo,,0.92,0.59,37,1,小组的 (hit 0.41); 组的 (hit 0.46); 成员 (hit 0.46)
+text,Create Custom,创建自定义,required,todo,,0.97,0.12,29,1,
+text,related objects,相关对象,required,todo,,0.95,0.65,57,1,字段 (hit 0.46)
+text,user account,用户客户,ambiguous,todo,,0.52,0.44,21,1,用户帐户 (hit 0.48); 用户帐 (hit 0.48); 户帐户 (hit 0.48)
+text,Choose whether,选择是否,ambiguous,todo,,0.52,0.43,27,1,
+text,Merge,扩展的邮件合,ambiguous,todo,,0.54,0.60,24,1,的邮件合并 (hit 0.54); 邮件合并 (hit 0.62); 件合并 (hit 0.62)
+text,fiscal year,会计年度,required,todo,,0.92,0.77,106,1,定义 (hit 0.42); 自定义 (hit 0.30); 自定 (hit 0.30)
+text,support records,支持记录,required,todo,,1.00,0.66,23,1,权利过程 (hit 0.70); 权利过 (hit 0.70); 利过程 (hit 0.70)
+text,record count,记录计数,ambiguous,todo,,0.81,0.79,26,1,报表中 (hit 0.50); 图表 (hit 0.58); 的记录 (hit 0.50)
+text,Get Started,入门,ambiguous,todo,,0.70,0.40,27,1,开始使用 (hit 0.33); 开始使 (hit 0.33); 始使用 (hit 0.33)
+text,domain name,域名,required,auto,,1.00,0.74,97,1,的域名 (hit 0.32); 的域 (hit 0.37); 使用 (hit 0.37)
+text,mobile workforce,移动员工,required,auto,,0.98,0.87,50,1,了解 (hit 0.40); 工作 (hit 0.46); 服务 (hit 0.44)
+text,forecast amounts,预测金额,required,auto,,1.00,0.73,41,1,的预测金 (hit 0.41); 的预测 (hit 0.51); 的预 (hit 0.51)
+text,parent object,父对象,ambiguous,todo,,0.85,0.72,34,1,关系 (hit 0.38); 对象的 (hit 0.35); 象的 (hit 0.35)
+text,User License,用户许可证,required,todo,,0.95,0.16,20,1,类型 (hit 0.45); 对象 (hit 0.30); 使用 (hit 0.35)
+text,campaign member,市场活动成员,required,todo,,0.97,0.50,65,1,
+text,mobile users,移动用户,required,todo,,1.00,0.66,27,1,设备 (hit 0.33); 应用程序 (hit 0.37); 应用程 (hit 0.37)
+text,best practices,最佳实践,ambiguous,todo,,0.87,0.49,46,1,
+text,Data Integration,数据集成,required,auto,,1.00,0.58,41,1,集成规则 (hit 0.59); 集成规 (hit 0.59); 数据集成规则 (hit 0.56)
+text,products consumed,消耗产品,ambiguous,todo,,0.64,0.39,22,1,的产品 (hit 0.64); 的产 (hit 0.64); 品项 (hit 0.41)
+text,per user,每个用户,ambiguous,todo,,0.70,0.20,23,1,数量 (hit 0.39); 许可证 (hit 0.35); 可证 (hit 0.35)
+text,child object,子对象,ambiguous,todo,,0.87,0.56,23,1,父对象 (hit 0.39); 父对 (hit 0.39); 关系 (hit 0.39)
+text,San Francisco,旧金山,ambiguous,todo,,0.64,0.78,22,1,城市 (hit 0.32); 例如 (hit 0.45); 字段 (hit 0.41)
+text,trace flags,跟踪标记,required,todo,,0.95,0.74,21,1,调试日志 (hit 0.43); 调试日 (hit 0.43); 试日志 (hit 0.43)
+text,Opportunity object,业务机会对象,ambiguous,todo,,0.67,0.60,24,1,

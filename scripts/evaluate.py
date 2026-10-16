@@ -4,7 +4,7 @@ Compares the configurations (A = translate only, B = + style rules and
 glossary, C = full pipeline) on the 200 golden segments:
 - chrF of the text against the professional reference, with a bootstrap
   95% confidence interval and a paired comparison with the first run;
-- tag integrity, protected content, term accuracy and gate pass rate, by
+- tag integrity, protected content, UI label and term accuracy and gate pass rate, by
   re-running the deterministic QA gate on every final target;
 - routing to human review, edit-stage activity and cost, read from the run.
 
@@ -214,8 +214,8 @@ def gate_metrics(rows: list[dict], targets: list[str], glossary) -> dict:
     The issues stored in the run are ignored on purpose: every configuration,
     and the human reference, is judged by the same gate code and glossary.
     """
-    tag_failed, protected_failed, gate_failed, term_failed = [], [], [], []
-    n_protected = n_term_pairs = n_term_missed = 0
+    tag_failed, protected_failed, gate_failed, term_failed, ui_failed = [], [], [], [], []
+    n_protected = n_term_pairs = n_term_missed = n_ui_pairs = n_ui_missed = 0
     for row, target in zip(rows, targets):
         issues = qa_gate.check_segment(row["source"], target, glossary=glossary)
         errors = [issue.check for issue in issues if issue.severity == "error"]
@@ -240,6 +240,15 @@ def gate_metrics(rows: list[dict], targets: list[str], glossary) -> dict:
         if missed:
             term_failed.append(row["id"])
 
+        # UI labels: one ui_label error per required label the target lacks.
+        ui_required = [e for _, e in qa_gate.find_ui_labels(row["source"], glossary)
+                       if e.kind == "required"]
+        ui_missed = errors.count("ui_label")
+        n_ui_pairs += len(ui_required)
+        n_ui_missed += ui_missed
+        if ui_missed:
+            ui_failed.append(row["id"])
+
         if not qa_gate.passed(issues):
             gate_failed.append(row["id"])
 
@@ -254,6 +263,9 @@ def gate_metrics(rows: list[dict], targets: list[str], glossary) -> dict:
         # Counted per (segment, term) pair; failed_ids = segments with a miss.
         "term_accuracy": {"ok": n_term_ok, "n": n_term_pairs,
                           "pct": percent(n_term_ok, n_term_pairs), "failed_ids": term_failed},
+        "ui_label_accuracy": {"ok": n_ui_pairs - n_ui_missed, "n": n_ui_pairs,
+                              "pct": percent(n_ui_pairs - n_ui_missed, n_ui_pairs),
+                              "failed_ids": ui_failed},
         "gate_pass": outcome(len(rows), gate_failed),
     }
 
@@ -395,22 +407,25 @@ def markdown_report(results: dict) -> str:
 
     out += ["", "## Main comparison", "",
             "| Run | chrF [95% CI] | chrF tagged | chrF untagged | Tag integrity | "
-            "Protected intact | Term accuracy | Gate pass | Routed to review | $ / 1k words |",
-            "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|"]
+            "Protected intact | UI labels | Terms in text | Gate pass | Routed to review | $ / 1k words |",
+            "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
     for run in runs:
         chrf = run["chrf"]
         low, high = chrf["ci95"]
         out.append(f"| {run['name']} | {chrf['overall']:.1f} [{low:.1f}, {high:.1f}] | "
                    f"{fmt_num(chrf['tagged'])} | {fmt_num(chrf['untagged'])} | "
                    f"{fmt_pct(run['tag_integrity'])} | {fmt_pct(run['protected_intact'])} | "
+                   f"{fmt_pct(run['ui_label_accuracy'])} | "
                    f"{fmt_pct(run['term_accuracy'])} | {fmt_pct(run['gate_pass'])} | "
                    f"{fmt_pct(run['routed'])} | ${run['cost']['usd_per_1k_words']:.3f} |")
     out.append(f"| Human reference | n/a | n/a | n/a | {fmt_pct(ref['tag_integrity'])} | "
-               f"{fmt_pct(ref['protected_intact'])} | {fmt_pct(ref['term_accuracy'])} | "
+               f"{fmt_pct(ref['protected_intact'])} | {fmt_pct(ref['ui_label_accuracy'])} | "
+               f"{fmt_pct(ref['term_accuracy'])} | "
                f"{fmt_pct(ref['gate_pass'])} | n/a | n/a |")
     out += ["", f"Denominators: tag integrity over the {ref['tag_integrity']['n']} tagged "
             f"segments; protected intact over the {ref['protected_intact']['n']} segments with "
-            f"a protected tag (a small sample); term accuracy over "
+            f"a protected tag (a small sample); UI labels over "
+            f"{ref['ui_label_accuracy']['n']} (segment, required label) pairs; terms in text over "
             f"{ref['term_accuracy']['n']} (segment, required term) pairs; gate pass and routing "
             f"over all {golden['segments']} segments."]
 
@@ -505,9 +520,14 @@ def markdown_report(results: dict) -> str:
             f"{'/'.join(f'`{t}`' for t in sorted(qa_gate.PROTECTED_TAGS))} element, with no "
             "`protected_content` error. A target that is not well-formed XML counts as not "
             "intact, because its protected text cannot be checked.",
-            "  - *Term accuracy*: (segment, required term) pairs where the gate's `find_terms` "
-            "finds the term in the source; correct = the approved translation appears in the "
-            "target (no `terminology` error for it).",
+            "  - *UI labels*: (segment, required label) pairs where the whole text of a "
+            "`uicontrol`/`parmname` in the source is a \"ui\" glossary label (`find_ui_labels`); "
+            "correct = a target tag of the same kind has exactly the approved translation "
+            "(no `ui_label` error).",
+            "  - *Terms in text*: (segment, required term) pairs where the gate's `find_terms` "
+            "finds a \"text\" glossary term in the running text of the source (outside UI and "
+            "code tags); correct = the approved translation appears in the target (no "
+            "`terminology` error for it).",
             "  - *Gate pass*: segments with no error-level issue. The gate checks format, "
             "protected content and required terms, not meaning or fluency: it is a routing "
             "filter, not a quality score.",

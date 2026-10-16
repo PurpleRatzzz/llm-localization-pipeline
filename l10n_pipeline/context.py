@@ -1,16 +1,17 @@
 """Context assembly: everything the model is told besides the source text.
 
 The model gets structured context, not a bare string: the zh-CN style rules
-and only the glossary entries that occur in the segments of this request.
-Terms are found with qa_gate.find_terms, so the model is shown exactly the
-terms the gate will later enforce.
+and only the glossary entries that occur in the segments of this request,
+split by scope (UI labels inside <uicontrol>/<parmname>, terms in running
+text). Entries are found with the gate's own matchers (find_ui_labels,
+find_terms), so the model is shown exactly what the gate will enforce.
 """
 
 import csv
 import re
 from pathlib import Path
 
-from l10n_pipeline.qa_gate import find_terms
+from l10n_pipeline.qa_gate import find_terms, find_ui_labels
 from l10n_pipeline.units import GlossaryEntry, Unit
 
 CONTEXT_DIR = Path(__file__).resolve().parent.parent / "context"
@@ -19,9 +20,10 @@ STYLE_PATH = CONTEXT_DIR / "style.zh-CN.md"
 
 
 def load_glossary(path: Path = GLOSSARY_PATH) -> list[GlossaryEntry]:
-    # Extra columns in the CSV (e.g. "evidence") are for the human reviewer only.
+    # Extra columns in the CSV ("review", "evidence") are for the human reviewer only.
     with open(path, encoding="utf-8", newline="") as f:
-        return [GlossaryEntry(row["source"], row["target"], row["kind"], row.get("note", ""))
+        return [GlossaryEntry(row["source"], row["target"], row["kind"], row.get("note", ""),
+                              row.get("scope", "text"))
                 for row in csv.DictReader(f)]
 
 
@@ -32,11 +34,11 @@ def load_style_rules(path: Path = STYLE_PATH) -> str:
     return match.group(1).strip()
 
 
-def glossary_block(units: list[Unit], glossary: list[GlossaryEntry]) -> str:
-    # One request covers several segments; list each matching term once.
-    entries = {e.source: e for unit in units for e in find_terms(unit.source, glossary)}
+def _lines(entries: list[GlossaryEntry]) -> str:
+    # One request covers several segments; list each matching entry once.
+    unique = {e.source: e for e in entries}
     lines = []
-    for e in sorted(entries.values(), key=lambda e: e.source.lower()):
+    for e in sorted(unique.values(), key=lambda e: e.source.lower()):
         if e.kind == "required":
             lines.append(f"- {e.source} → {e.target} (required)")
         else:
@@ -47,7 +49,12 @@ def glossary_block(units: list[Unit], glossary: list[GlossaryEntry]) -> str:
 def build_context(units: list[Unit], glossary: list[GlossaryEntry], style_rules: str) -> str:
     """The text that replaces {context} in a prompt template."""
     parts = ["## Style rules\n\n" + style_rules]
-    terms = glossary_block(units, glossary)
-    if terms:
-        parts.append("## Glossary for these segments\n\n" + terms)
+    ui = [e for unit in units for _, e in find_ui_labels(unit.source, glossary)]
+    if ui:
+        parts.append("## UI labels in these segments\n\n"
+                     "When the WHOLE text of a <uicontrol> or <parmname> is one of these "
+                     "labels, translate it exactly like this:\n\n" + _lines(ui))
+    text = [e for unit in units for e in find_terms(unit.source, glossary)]
+    if text:
+        parts.append("## Terms in the running text of these segments\n\n" + _lines(text))
     return "\n" + "\n\n".join(parts) + "\n"
