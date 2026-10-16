@@ -52,3 +52,6 @@ class Result:
     target: str
     status: Literal["auto_approved", "needs_review"]
     issues: list[Issue] = field(default_factory=list)
+    drafts: dict[str, str | None] = field(default_factory=dict)  # output of each stage
+    reverted: bool = False           # the edit stage broke the gate, so its output was discarded
+    mqm_penalty: int | None = None   # verifier score: minor 1, major 5, critical 25 per error
