@@ -332,3 +332,21 @@ def test_passed_allows_warnings_but_not_errors():
     assert passed([])
     assert passed([Issue("numbers", "warning", "x")])
     assert not passed([Issue("numbers", "warning", "x"), Issue("tag_set", "error", "y")])
+
+
+# ------------------------------------------------------------- untranslated
+
+def test_copied_english_prose_is_an_error():
+    source = "Enable Chatter before you enable link previews."
+    assert checks(check_segment(source, source), "error") == ["untranslated"]
+
+
+def test_identifier_left_in_english_passes():
+    # dev 1563: an identifier is correctly kept as is.
+    assert check_segment("file_not_found", "file_not_found") == []
+
+
+def test_product_name_left_in_english_passes():
+    # No lowercase prose words, so keeping it in English is allowed.
+    source = "<xref>Microsoft Active Directory Federation Services 2.0</xref>."
+    assert check_segment(source, source) == []

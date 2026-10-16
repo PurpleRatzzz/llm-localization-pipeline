@@ -61,6 +61,15 @@ LENGTH_RATIO_MAX = 1.0
 # warning, not an error, because it is cosmetic and never changes meaning.
 CJK = "\u3400-\u4dbf\u4e00-\u9fff"   # CJK Unified Ideographs + Extension A
 MISSING_SPACE_RE = re.compile(f"[{CJK}][A-Za-z0-9]|[A-Za-z0-9][{CJK}]")
+CJK_RE = re.compile(f"[{CJK}]")
+
+# A target with no Chinese at all is fine for an identifier ("file_not_found",
+# "Map<String>", a product name) but not for prose. Prose is detected by
+# all-lowercase English words: identifiers, formulas and product names have
+# none. 65 of the 72 dev references without any Chinese have 0 such words, the
+# rest have 1-2; none has 3 or more. 144 of the 200 golden sources do.
+UNTRANSLATED_MIN_PROSE_WORDS = 3
+PROSE_WORD_RE = re.compile(r"[a-z]+[.,;:!?]?")
 
 
 # ---------------------------------------------------------------- helpers
@@ -329,6 +338,16 @@ def check_length(source_text: str, target_text: str, max_length: int | None,
     return issues
 
 
+def check_untranslated(source_text: str, target_text: str) -> list[Issue]:
+    # Without this check, a target that simply copies the English source
+    # passes the gate in 62% of golden segments (found by the evaluation).
+    prose = [w for w in source_text.split() if PROSE_WORD_RE.fullmatch(w)]
+    if len(prose) >= UNTRANSLATED_MIN_PROSE_WORDS and not CJK_RE.search(target_text):
+        return [Issue("untranslated", "error",
+                      "Target contains no Chinese although the source is English prose")]
+    return []
+
+
 def check_cjk_latin_spacing(target_nodes: list[str]) -> list[Issue]:
     # Checked inside each text node, so "输入<b>Chatter</b>" (a tag between the
     # two scripts) is not counted, and punctuation never forms an adjacency.
@@ -376,6 +395,7 @@ def check_segment(source: str, target: str, *, glossary: list[GlossaryEntry] | N
             src_free, tgt_free = "".join(src_nodes), "".join(tgt_nodes)
         issues += check_escaped_literals(source, target)
 
+    issues += check_untranslated(src_free, tgt_free)
     issues += check_numbers(src_free, tgt_free)
     issues += check_placeholders(source, target)
     issues += check_terminology(source, tgt_free, glossary or [])

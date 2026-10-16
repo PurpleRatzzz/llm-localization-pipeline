@@ -236,7 +236,7 @@ def main():
     error_fp = failed - len(real_error_ids)
 
     checks = ["xml_wellformed", "tag_set", "tag_nesting", "tag_order", "protected_content",
-              "escaped_literals", "numbers", "placeholders", "terminology", "length",
+              "escaped_literals", "untranslated", "numbers", "placeholders", "terminology", "length",
               "cjk_latin_spacing"]
     out = ["# QA gate calibration on human references", "",
            f"Gate run on all {len(ids)} dev pairs (EN source, human ZH reference), "

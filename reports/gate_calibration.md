@@ -21,6 +21,7 @@ Verdicts were recorded by reading every flagged reference: *real* = the referenc
 | tag_order | 0 | 12 | 0 | 12 |
 | protected_content | 6 | 0 | 4 | 2 |
 | escaped_literals | 0 | 2 | 0 | 2 |
+| untranslated | 0 | 0 | 0 | 0 |
 | numbers | 0 | 11 | 1 | 10 |
 | placeholders | 0 | 0 | 0 | 0 |
 | terminology | 0 | 0 | 0 | 0 |
