@@ -106,7 +106,9 @@ def ui_label_texts(segment, tag):
 
 
 def write_csv(path, rows, fieldnames):
-    with open(path, "w", encoding="utf-8", newline="") as f:
+    # utf-8-sig writes a byte-order mark first: without it Excel reads the
+    # file in the system encoding and the Chinese turns into mojibake.
+    with open(path, "w", encoding="utf-8-sig", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
@@ -127,7 +129,9 @@ def align_ui_labels(train_rows):
     """Count English label -> Chinese label pairs across the train set."""
     counts = defaultdict(Counter)
     for row in train_rows:
-        for tag in UI_TAGS:
+        # sorted(): iterating a set of strings follows Python's per-process hash
+        # randomization, which would change tie-breaking from run to run.
+        for tag in sorted(UI_TAGS):
             en_labels = ui_label_texts(row["source"], tag)
             zh_labels = ui_label_texts(row["reference"], tag)
             # Pair by position only when both sides have the same number of this
@@ -150,7 +154,7 @@ def align_ui_labels(train_rows):
 def ui_candidates(train_rows, eval_rows):
     counts = align_ui_labels(train_rows)
     # Every UI label in the golden/tune sources, to keep only relevant entries.
-    eval_labels = [{label for tag in UI_TAGS for label in ui_label_texts(row["source"], tag)}
+    eval_labels = [{label for tag in sorted(UI_TAGS) for label in ui_label_texts(row["source"], tag)}
                    for row in eval_rows]
     rows = []
     for en, zh_counts in counts.items():
@@ -237,7 +241,7 @@ def text_candidates(train_rows, eval_rows):
     # Posting lists: which train segments contain each relevant English term.
     postings = defaultdict(list)
     for i, text in enumerate(src_text):
-        for term in english_terms(text) & eval_terms.keys():
+        for term in sorted(english_terms(text) & eval_terms.keys()):   # sorted: reproducible order
             postings[term].append(i)
     postings = drop_nested({t: segs for t, segs in postings.items() if len(segs) >= TEXT_MIN_DF})
 
@@ -249,7 +253,10 @@ def text_candidates(train_rows, eval_rows):
         for i in segs[:400]:
             counts.update(chinese_strings(ref_text[i]))
         sample = min(len(segs), 400)
-        shortlist[term] = [zh for zh, n in counts.most_common(15) if n >= 0.3 * sample]
+        # Sort by count, then by the string itself, so ties break the same way
+        # on every run (most_common would follow the random set order).
+        ranked = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))[:15]
+        shortlist[term] = [zh for zh, n in ranked if n >= 0.3 * sample]
 
     # How many references contain each shortlisted string (one pass over train).
     wanted = {zh for zhs in shortlist.values() for zh in zhs}

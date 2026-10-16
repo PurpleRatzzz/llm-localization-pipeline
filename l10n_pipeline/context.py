@@ -21,7 +21,9 @@ STYLE_PATH = CONTEXT_DIR / "style.zh-CN.md"
 
 def load_glossary(path: Path = GLOSSARY_PATH) -> list[GlossaryEntry]:
     # Extra columns in the CSV ("review", "evidence") are for the human reviewer only.
-    with open(path, encoding="utf-8", newline="") as f:
+    # utf-8-sig also reads files without a byte-order mark, so a CSV saved by
+    # Excel ("CSV UTF-8") or by a text editor both load.
+    with open(path, encoding="utf-8-sig", newline="") as f:
         return [GlossaryEntry(row["source"], row["target"], row["kind"], row.get("note", ""),
                               row.get("scope", "text"))
                 for row in csv.DictReader(f)]
