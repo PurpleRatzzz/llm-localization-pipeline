@@ -1,5 +1,5 @@
 ﻿scope,source,target,kind,note,review,evidence
-text,Account,客户,required,,done,"hit rate 0.95, dice 0.25, 1115 train segments, 4 golden/tune segments"
+text,Account,客户|账户,ambiguous,"客户 for the Salesforce Account object (a customer company record); 账户 for a login, user or connected account (R11)",done,"hit rate 0.95, dice 0.25, 1115 train segments, 4 golden/tune segments"
 ui,Add,添加,required,,done,"tag share 0.98, 127 aligned pairs, 1 golden/tune segments; alternatives: 应用程序 (1); 新增 (1)"
 ui,Amount,金额,required,,done,"tag share 0.94, 33 aligned pairs, 1 golden/tune segments; alternatives: Opportunity category (1); 数量 (1)"
 ui,App,应用程序,required,,done,"tag share 1.00, 14 aligned pairs, 1 golden/tune segments"

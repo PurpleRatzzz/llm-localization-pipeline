@@ -7,15 +7,18 @@ version is one full run of config C (translate → edit → verify) with
 so the same prompt gives slightly different output on every run: chrF
 differences below about 1 point are noise.
 
-| | v1 | v2 | v3 (frozen) |
-|---|---|---|---|
-| chrF, translate draft | 61.1 | 62.4 | 61.7 |
-| chrF, after edit | 61.2 | 62.7 | 62.0 |
-| Segments changed by edit (closer / further from reference) | 6 (2 / 4) | 2 (1 / 1) | 4 (2 / 2) |
-| Required terms hit, draft → final (of 56) | 48 → 54 | 53 → 55 | 53 → 55 |
-| MQM major errors | 5 | 6 | 0 |
-| Routed to human review | 7 | 6 | 1 |
-| Cost (100 segments) | $0.38 | $0.39 | $0.40 |
+| | v1 | v2 | v3 | v4 (final) |
+|---|---|---|---|---|
+| chrF, translate draft | 61.1 | 62.4 | 61.7 | 63.3 |
+| chrF, after edit | 61.2 | 62.7 | 62.0 | 63.3 |
+| Segments changed by edit (closer / further from reference) | 6 (2 / 4) | 2 (1 / 1) | 4 (2 / 2) | 3 (1 / 2) |
+| Required terms hit, draft → final | 48 → 54 of 56 | 53 → 55 of 56 | 53 → 55 of 56 | 14 → 15 of 16* |
+| MQM major errors | 5 | 6 | 0 | 2 |
+| Routed to human review | 7 | 6 | 1 | 1 |
+| Cost (100 segments) | $0.38 | $0.39 | $0.40 | $0.41 |
+
+\* v4 uses the reviewed two-scope glossary (fewer, stricter entries), so its
+term counts are not comparable with v1-v3.
 
 ## What changed and why
 
@@ -44,6 +47,20 @@ differences below about 1 point are noise.
   explanation and still had to choose a severity.
   *Fix:* the explanation field now comes first, and the severity enum gained a
   `not_an_error` value, whose entries are dropped in code.
+
+**v3 → v4** (after the glossary and style review)
+- *Changes:* the reviewed glossary (UI-label and running-text scopes,
+  closed sets of translations), style rules R11-R13, and term-choice hints
+  for the editor.
+- *Worked as designed:* a draft invented a `<parmname>` tag that the source
+  does not have; the gate reported it and the editor removed it.
+- *Problem:* a conflict between the glossary and the style rules. "Connected
+  Accounts" are login accounts, so the draft's 关联账户 followed R11, but the
+  required glossary entry Account → 客户 made the gate flag it and the editor
+  changed it to 关联客户. The verifier caught this as a major terminology error
+  and routed the segment to human review.
+  *Fix (reviewer decision):* Account in running text became an ambiguous
+  closed set 客户|账户 with a note saying when to use which.
 
 ## Open risk
 
