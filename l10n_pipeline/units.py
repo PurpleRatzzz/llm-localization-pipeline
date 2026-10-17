@@ -41,12 +41,23 @@ class GlossaryEntry:
 
     @property
     def targets(self) -> list[str]:
-        """All acceptable translations. Every entry is enforced by the gate
-        against this closed set. "required": any of them is fine (variants
-        such as 详细信息页面|详细信息页). "ambiguous": the right one depends on
-        context, so a choice from the set is also shown to the editor with
-        the note to double-check."""
+        """All acceptable translations listed for this term."""
         return [t.strip() for t in self.target.split("|") if t.strip()]
+
+    @property
+    def enforced(self) -> bool:
+        """Whether the QA gate requires one of the targets.
+
+        required                  any listed translation is fine (variants such
+                                  as 详细信息页面|详细信息页); enforced.
+        ambiguous, several listed a closed set: the right one depends on context,
+                                  but nothing outside the set is acceptable;
+                                  enforced, and the editor double-checks the choice.
+        ambiguous, one listed     guidance only ("usually X"): the reviewer could
+                                  not list every correct translation (e.g. a UI
+                                  word used freely in running text); not enforced.
+        """
+        return self.kind == "required" or len(self.targets) > 1
 
 
 @dataclass

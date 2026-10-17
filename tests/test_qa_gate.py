@@ -439,3 +439,13 @@ def test_term_inside_a_name_kept_in_english_passes():
     # A term left in English on its own is still an error.
     issues = check_segment("Open the Account.", "打开 Account。", glossary=glossary)
     assert checks(issues, "error") == ["terminology"]
+
+
+def test_ambiguous_entry_with_one_translation_is_guidance_only():
+    # Reviewer's decision: a UI word used freely in running text gets a hint
+    # ("usually 社区"), not a rule. Only a listed set of options is enforced.
+    guidance = [GlossaryEntry("Community", "社区", kind="ambiguous")]
+    assert check_segment("Join the Community forum.", "加入用户论坛。", glossary=guidance) == []
+    closed = [GlossaryEntry("Community", "社区|社群", kind="ambiguous")]
+    assert checks(check_segment("Join the Community forum.", "加入用户论坛。", glossary=closed),
+                  "error") == ["terminology"]

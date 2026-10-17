@@ -21,3 +21,10 @@ def test_required_terms_and_misses_are_not_hints():
     # A required term needs no judgement; a miss is already a gate error.
     unit = Unit("s2", "Share the report with a contact.")
     assert term_choices(unit, "与某人共享报表。", GLOSSARY) == []
+
+
+def test_guidance_only_term_is_a_hint_even_when_unused():
+    guidance = [GlossaryEntry("Community", "社区", kind="ambiguous", note="")]
+    hints = term_choices(Unit("s3", "Join the Community forum."), "加入用户论坛。", guidance)
+    assert hints == ['"Community": usually 社区, which the draft does not use; '
+                     'keep the draft unless 社区 fits better.']

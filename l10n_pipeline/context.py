@@ -45,8 +45,11 @@ def _lines(entries: list[GlossaryEntry]) -> str:
         if e.kind == "required":
             also = f"; also acceptable: {' / '.join(others)}" if others else ""
             lines.append(f"- {e.source} → {first} (required{also})")
-        else:
+        elif e.enforced:
             lines.append(f"- {e.source} → one of: {' / '.join(e.targets)}. "
+                         f"{e.note or 'Choose by context.'}")
+        else:
+            lines.append(f"- {e.source} → usually {first}, but not always. "
                          f"{e.note or 'Choose by context.'}")
     return "\n".join(lines)
 

@@ -231,10 +231,10 @@ def gate_metrics(rows: list[dict], targets: list[str], glossary) -> dict:
             if "protected_content" in errors or "xml_wellformed" in errors:
                 protected_failed.append(row["id"])
 
-        # Same rule as the gate: every glossary entry found in the source is
-        # checked (required and ambiguous alike, each against its listed
-        # translations), with one terminology error per entry not satisfied.
-        checked = qa_gate.find_terms(row["source"], glossary)
+        # Same rule as the gate: every enforced glossary entry found in the
+        # source (GlossaryEntry.enforced) is checked against its listed
+        # translations, with one terminology error per entry not satisfied.
+        checked = [e for e in qa_gate.find_terms(row["source"], glossary) if e.enforced]
         missed = errors.count("terminology")
         n_term_pairs += len(checked)
         n_term_missed += missed
@@ -242,7 +242,7 @@ def gate_metrics(rows: list[dict], targets: list[str], glossary) -> dict:
             term_failed.append(row["id"])
 
         # UI labels: one ui_label error per glossary label the target lacks.
-        ui_checked = qa_gate.find_ui_labels(row["source"], glossary)
+        ui_checked = [e for _, e in qa_gate.find_ui_labels(row["source"], glossary) if e.enforced]
         ui_missed = errors.count("ui_label")
         n_ui_pairs += len(ui_checked)
         n_ui_missed += ui_missed
@@ -535,9 +535,11 @@ def markdown_report(results: dict) -> str:
             "(`status` = `needs_review`): any gate error, plus error-level verifier findings "
             "when the verify stage runs.",
             f"- **Glossary**: `{glossary['file']}`, {glossary['entries']} entries, "
-            f"{glossary['required']} required. Every entry is a closed set of acceptable "
-            "translations (`target` may list several, separated by `|`) and is enforced by the "
-            "gate; for ambiguous entries the editor also double-checks the choice.",
+            f"{glossary['required']} required. `target` may list several acceptable "
+            "translations separated by `|`. Enforced by the gate: required entries, and "
+            "ambiguous entries that list several options (a closed set). An ambiguous entry "
+            "with one translation is guidance only (\"usually X\"). For ambiguous entries the "
+            "editor double-checks the wording.",
             "- **Cost**: from each run's `summary.json`, computed from the API token counts of "
             "every request (a request served from the local cache reports the cost of its "
             f"original call). $ / 1k words uses the {golden['source_words']:,} source words of "

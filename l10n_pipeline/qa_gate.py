@@ -350,13 +350,13 @@ def _allowed(entry: GlossaryEntry) -> str:
 
 def check_terminology(source: str, target_text: str,
                       glossary: list[GlossaryEntry]) -> list[Issue]:
-    # Every entry is a closed set of acceptable translations (GlossaryEntry.
-    # targets): the target must use one of them. For an ambiguous entry the
-    # choice between them needs judgement, which the editor and verifier get.
+    # An enforced entry is a closed set of acceptable translations: the target
+    # must use one of them (see GlossaryEntry.enforced). Whether the choice
+    # fits the context is left to the editor and verifier.
     issues = []
     text = _running_text(source)
     for entry in find_terms(source, glossary):
-        if not any(t in target_text for t in entry.targets) \
+        if entry.enforced and not any(t in target_text for t in entry.targets) \
                 and not _kept_in_english(entry.source, text, target_text):
             issues.append(Issue("terminology", "error",
                                 f'Term "{entry.source}" must be translated as '
@@ -404,6 +404,8 @@ def check_ui_labels(source: str, tgt_root: ET.Element,
     available = Counter(_ui_labels(tgt_root))
     issues = []
     for tag, entry in find_ui_labels(source, glossary):
+        if not entry.enforced:
+            continue
         used = next((t for t in entry.targets if available[(tag, t)] > 0), None)
         if used:
             available[(tag, used)] -= 1
@@ -468,7 +470,7 @@ def check_segment(source: str, target: str, *, glossary: list[GlossaryEntry] | N
         src_free, tgt_free = source, target
         # A whole UI string is itself a UI label: "Save" must become 保存.
         entry = _ui_entry(source.strip(), glossary or [])
-        if entry and target.strip() not in entry.targets:
+        if entry and entry.enforced and target.strip() not in entry.targets:
             issues.append(Issue("ui_label", "error",
                                 f'UI label "{source.strip()}" must be translated as {_allowed(entry)}'))
     else:

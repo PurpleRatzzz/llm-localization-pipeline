@@ -74,18 +74,25 @@ def gate(unit: Unit, target: str, glossary: list[GlossaryEntry]) -> list[Issue]:
 
 
 def term_choices(unit: Unit, draft: str, glossary: list[GlossaryEntry]) -> list[str]:
-    """Ambiguous entries the draft satisfies with one of their options.
+    """Ambiguous entries whose wording in the draft needs a human-like look.
 
-    The gate only knows the choice is in the approved set, not whether it
-    fits this context, so the editor double-checks it against the note.
+    The gate can only check membership in a set; whether the choice fits this
+    context needs judgement, so the editor double-checks it against the note.
+    Missing an enforced entry is not listed here: that is already a gate error.
     """
     entries = find_terms(unit.source, glossary) + [e for _, e in find_ui_labels(unit.source, glossary)]
     hints = {}
     for e in entries:
+        if e.kind != "ambiguous":
+            continue
         used = [t for t in e.targets if t in draft]
-        if e.kind == "ambiguous" and used:
+        if used:
             hints[e.source] = (f'"{e.source}": the draft uses {used[0]}; options: '
                                f'{" / ".join(e.targets)}. {e.note}').strip()
+        elif not e.enforced:
+            hints[e.source] = (f'"{e.source}": usually {e.targets[0]}, which the draft does '
+                               f'not use; keep the draft unless {e.targets[0]} fits better. '
+                               f'{e.note}').strip()
     return list(hints.values())
 
 

@@ -9,9 +9,9 @@ translations.
 
 For each segment, return the final translation:
 - Fix every QA finding.
-- For each term choice, check the chosen option against its note and the
-  meaning of this segment. Switch to another listed option only if it fits
-  better; never use a translation outside the listed options.
+- For each term choice, check the wording against its note and the meaning
+  of this segment, and change it only if another listed option fits better.
+  When a term lists several options, never use a translation outside them.
 - Fix accuracy, terminology and style problems according to the rules below.
 - Change only what is wrong. If the draft is already correct, return it
   unchanged. Do not replace a correct word with a synonym.
