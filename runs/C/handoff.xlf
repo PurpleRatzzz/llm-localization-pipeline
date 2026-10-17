@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file original="salesforce-help.xml" source-language="en-US" target-language="zh-CN" datatype="xml">
+    <body>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000000113">
+        <source>To automatically assign all incoming leads or cases to a specific user, create an assignment rule that includes the following rule entries: <g id="1" ctype="x-ul"><g id="2" ctype="x-li"><g id="3" ctype="x-userinput">Received Connection Name contains name of connection</g></g><g id="4" ctype="x-li"><g id="5" ctype="x-userinput">Created By contains Connection User</g></g></g>You can do the same with escalation rules.</source>
+        <target state="needs-review-translation">要自动将所有传入的潜在客户或案例分配给特定用户，请创建包含以下规则条目的分配规则：<g id="1" ctype="x-ul"><g id="2" ctype="x-li"><g id="3" ctype="x-userinput">Received Connection Name contains name of connection</g></g><g id="4" ctype="x-li"><g id="5" ctype="x-userinput">Created By contains Connection User</g></g></g>您可以对升级规则执行同样的操作。</target>
+        <note from="qa" priority="1" annotates="target">[error] mqm_accuracy: [major] The &lt;userinput&gt; content is left in English, but it should be translated as what the user types in the Chinese UI.</note>
+      </trans-unit>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000000494">
+        <source>To post Site or Community URLs for articles into the case feed , you must have the <g id="1" ctype="x-xref">Knowledge sidebar enabled in the Service Console</g> and either a <g id="2" ctype="x-xref">Salesforce Site</g> or <g id="3" ctype="x-xref">Community</g> setup.</source>
+        <target state="needs-review-translation">要将文章的站点或社区 URL 发布到个案 Feed 中，您必须<g id="1" ctype="x-xref">在 Service Console 中启用 Knowledge 侧边栏</g>，并设置 <g id="2" ctype="x-xref">Salesforce 站点</g>或<g id="3" ctype="x-xref">社区</g>。</target>
+        <note from="qa" priority="1" annotates="target">[error] mqm_terminology: [major] Product name "Service Console" left in English while "Service" is required as 服务; "Service Console" is not in the R2 list, so it should be translated (服务控制台).</note>
+        <note from="qa" priority="5" annotates="target">[warning] mqm_terminology: [minor] "Feed" and "Knowledge" left untranslated in running text, and there is no space issue; "Feed" should be translated.</note>
+      </trans-unit>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000000522">
+        <source>Syncing creates or overwrites Salesforce external objects that map to the external system’s schema.<g id="1" ctype="x-ph">Syncing doesn’t copy any data into your Salesforce org or write data from your org to the external system.</g></source>
+        <target state="needs-review-translation">同步会创建或覆盖映射到外部系统架构的 Salesforce 外部对象。<g id="1" ctype="x-ph">同步不会将任何数据复制到您的 Salesforce 组织，也不会将数据从您的组织写入外部系统。</g></target>
+        <note from="qa" priority="1" annotates="target">[error] mqm_style: [major] "your Salesforce org" translated as 您的 Salesforce 组织 instead of 贵组织.</note>
+      </trans-unit>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000000876">
+        <source>One of two <g id="1" ctype="x-ph">Service Analytics</g> datasets with data from <g id="2" ctype="x-xref">Omni-Channel Agent Work</g> object. Includes data that helps you track information about the assignments your agents work on, including the queue, channel, status, and speed to answer. (Your org must use Omni-Channel to create and route work items for <g id="3" ctype="x-ph">Service Analytics</g> to create this dataset. You must also answer Yes to the configuration wizard question about Omni-Channel.)</source>
+        <target state="needs-review-translation">两个包含来自 <g id="2" ctype="x-xref">Omni-Channel Agent Work</g> 对象数据的<g id="1" ctype="x-ph">Service Analytics</g>数据集之一。其中包含的数据可帮助您跟踪坐席所处理分配的信息，包括队列、渠道、状态和应答速度。（贵组织必须使用全渠道来创建和路由工作项，<g id="3" ctype="x-ph">Service Analytics</g>才能创建此数据集。您还必须对配置向导中有关全渠道的问题回答“是”。）</target>
+        <note from="qa" priority="5" annotates="target">[warning] tag_order: Tag order differs from source: source ph, xref, ph; target xref, ph, ph</note>
+        <note from="qa" priority="1" annotates="target">[error] mqm_accuracy: [major] The &lt;xref&gt; link title was left in English instead of being translated.</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

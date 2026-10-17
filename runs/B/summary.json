@@ -1,0 +1,18 @@
+{
+  "config": "B",
+  "description": "Translate with style rules + glossary",
+  "model": "claude-sonnet-5-5",
+  "segments": 200,
+  "source_words": 3477,
+  "stages": {
+    "translate": {
+      "cost_usd": 0.266112,
+      "input_tokens": 49856,
+      "output_tokens": 16640,
+      "requests": 20,
+      "cached_requests": 0,
+      "seconds": 100.835932
+    }
+  },
+  "total_cost_usd": 0.266112
+}

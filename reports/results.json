@@ -1,0 +1,450 @@
+{
+  "golden": {
+    "file": "data/golden.jsonl",
+    "segments": 200,
+    "tagged": 100,
+    "source_words": 3477
+  },
+  "glossary": {
+    "file": "context/glossary.zh-CN.csv",
+    "entries": 64,
+    "required": 53
+  },
+  "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+  "bootstrap": {
+    "resamples": 1000,
+    "seed": 42
+  },
+  "baseline": "A",
+  "runs": [
+    {
+      "name": "A",
+      "config": "A",
+      "description": "Translate only, no style rules or glossary",
+      "model": "claude-sonnet-5-5",
+      "segments": 200,
+      "chrf": {
+        "overall": 57.065637,
+        "ci95": [
+          54.046073,
+          60.420978
+        ],
+        "tagged": 57.382691,
+        "untagged": 56.323672
+      },
+      "tag_integrity": {
+        "ok": 100,
+        "n": 100,
+        "pct": 100.0,
+        "failed_ids": []
+      },
+      "protected_intact": {
+        "ok": 6,
+        "n": 6,
+        "pct": 100.0,
+        "failed_ids": []
+      },
+      "term_accuracy": {
+        "ok": 49,
+        "n": 55,
+        "pct": 89.090909,
+        "failed_ids": [
+          "salesforce_localization_xml_mt:enzh_dev_0000000063",
+          "salesforce_localization_xml_mt:enzh_dev_0000000162",
+          "salesforce_localization_xml_mt:enzh_dev_0000000493",
+          "salesforce_localization_xml_mt:enzh_dev_0000000534",
+          "salesforce_localization_xml_mt:enzh_dev_0000001041",
+          "salesforce_localization_xml_mt:enzh_dev_0000001287"
+        ]
+      },
+      "ui_label_accuracy": {
+        "ok": 24,
+        "n": 31,
+        "pct": 77.419355,
+        "failed_ids": [
+          "salesforce_localization_xml_mt:enzh_dev_0000000193",
+          "salesforce_localization_xml_mt:enzh_dev_0000000299",
+          "salesforce_localization_xml_mt:enzh_dev_0000000358",
+          "salesforce_localization_xml_mt:enzh_dev_0000000617",
+          "salesforce_localization_xml_mt:enzh_dev_0000000849",
+          "salesforce_localization_xml_mt:enzh_dev_0000001468",
+          "salesforce_localization_xml_mt:enzh_dev_0000001635"
+        ]
+      },
+      "gate_pass": {
+        "ok": 187,
+        "n": 200,
+        "pct": 93.5,
+        "failed_ids": [
+          "salesforce_localization_xml_mt:enzh_dev_0000000063",
+          "salesforce_localization_xml_mt:enzh_dev_0000000162",
+          "salesforce_localization_xml_mt:enzh_dev_0000000193",
+          "salesforce_localization_xml_mt:enzh_dev_0000000299",
+          "salesforce_localization_xml_mt:enzh_dev_0000000358",
+          "salesforce_localization_xml_mt:enzh_dev_0000000493",
+          "salesforce_localization_xml_mt:enzh_dev_0000000534",
+          "salesforce_localization_xml_mt:enzh_dev_0000000617",
+          "salesforce_localization_xml_mt:enzh_dev_0000000849",
+          "salesforce_localization_xml_mt:enzh_dev_0000001041",
+          "salesforce_localization_xml_mt:enzh_dev_0000001287",
+          "salesforce_localization_xml_mt:enzh_dev_0000001468",
+          "salesforce_localization_xml_mt:enzh_dev_0000001635"
+        ]
+      },
+      "routed": {
+        "count": 13,
+        "n": 200,
+        "pct": 6.5
+      },
+      "edit": null,
+      "cost": {
+        "total_usd": 0.220302,
+        "source_words": 3477,
+        "usd_per_1k_words": 0.06336,
+        "stages": {
+          "translate": {
+            "cost_usd": 0.220302,
+            "input_tokens": 26926,
+            "output_tokens": 16645,
+            "requests": 20,
+            "cached_requests": 0,
+            "seconds": 103.71396
+          }
+        }
+      },
+      "vs_baseline": null
+    },
+    {
+      "name": "B",
+      "config": "B",
+      "description": "Translate with style rules + glossary",
+      "model": "claude-sonnet-5-5",
+      "segments": 200,
+      "chrf": {
+        "overall": 57.612741,
+        "ci95": [
+          54.443551,
+          60.870116
+        ],
+        "tagged": 57.839084,
+        "untagged": 57.085104
+      },
+      "tag_integrity": {
+        "ok": 100,
+        "n": 100,
+        "pct": 100.0,
+        "failed_ids": []
+      },
+      "protected_intact": {
+        "ok": 6,
+        "n": 6,
+        "pct": 100.0,
+        "failed_ids": []
+      },
+      "term_accuracy": {
+        "ok": 54,
+        "n": 55,
+        "pct": 98.181818,
+        "failed_ids": [
+          "salesforce_localization_xml_mt:enzh_dev_0000000719"
+        ]
+      },
+      "ui_label_accuracy": {
+        "ok": 31,
+        "n": 31,
+        "pct": 100.0,
+        "failed_ids": []
+      },
+      "gate_pass": {
+        "ok": 199,
+        "n": 200,
+        "pct": 99.5,
+        "failed_ids": [
+          "salesforce_localization_xml_mt:enzh_dev_0000000719"
+        ]
+      },
+      "routed": {
+        "count": 1,
+        "n": 200,
+        "pct": 0.5
+      },
+      "edit": null,
+      "cost": {
+        "total_usd": 0.266112,
+        "source_words": 3477,
+        "usd_per_1k_words": 0.076535,
+        "stages": {
+          "translate": {
+            "cost_usd": 0.266112,
+            "input_tokens": 49856,
+            "output_tokens": 16640,
+            "requests": 20,
+            "cached_requests": 0,
+            "seconds": 100.835932
+          }
+        }
+      },
+      "vs_baseline": {
+        "delta": 0.547104,
+        "ci95": [
+          -0.952728,
+          2.250637
+        ],
+        "share_le_0": 0.233
+      }
+    },
+    {
+      "name": "C",
+      "config": "C",
+      "description": "Full pipeline: translate + edit + verify, gate after each stage",
+      "model": "claude-sonnet-5-5",
+      "segments": 200,
+      "chrf": {
+        "overall": 57.867451,
+        "ci95": [
+          54.624974,
+          61.180511
+        ],
+        "tagged": 58.174076,
+        "untagged": 57.160622
+      },
+      "tag_integrity": {
+        "ok": 100,
+        "n": 100,
+        "pct": 100.0,
+        "failed_ids": []
+      },
+      "protected_intact": {
+        "ok": 6,
+        "n": 6,
+        "pct": 100.0,
+        "failed_ids": []
+      },
+      "term_accuracy": {
+        "ok": 55,
+        "n": 55,
+        "pct": 100.0,
+        "failed_ids": []
+      },
+      "ui_label_accuracy": {
+        "ok": 31,
+        "n": 31,
+        "pct": 100.0,
+        "failed_ids": []
+      },
+      "gate_pass": {
+        "ok": 200,
+        "n": 200,
+        "pct": 100.0,
+        "failed_ids": []
+      },
+      "routed": {
+        "count": 4,
+        "n": 200,
+        "pct": 2.0
+      },
+      "edit": {
+        "segments": 200,
+        "changed": 7,
+        "changed_pct": 3.5,
+        "reverted": 0,
+        "reverted_ids": []
+      },
+      "cost": {
+        "total_usd": 0.808186,
+        "source_words": 3477,
+        "usd_per_1k_words": 0.232438,
+        "stages": {
+          "translate": {
+            "cost_usd": 0.266112,
+            "input_tokens": 49856,
+            "output_tokens": 16640,
+            "requests": 20,
+            "cached_requests": 20,
+            "seconds": 100.84
+          },
+          "edit": {
+            "cost_usd": 0.299564,
+            "input_tokens": 66572,
+            "output_tokens": 16642,
+            "requests": 20,
+            "cached_requests": 0,
+            "seconds": 90.256612
+          },
+          "verify": {
+            "cost_usd": 0.24251,
+            "input_tokens": 67675,
+            "output_tokens": 10716,
+            "requests": 20,
+            "cached_requests": 0,
+            "seconds": 82.709868
+          }
+        }
+      },
+      "vs_baseline": {
+        "delta": 0.801814,
+        "ci95": [
+          -0.655947,
+          2.453688
+        ],
+        "share_le_0": 0.146
+      }
+    },
+    {
+      "name": "D",
+      "config": "D",
+      "description": "Translate with style rules + glossary + translation memory (fuzzy matches >= 75%)",
+      "model": "claude-sonnet-5-5",
+      "segments": 200,
+      "chrf": {
+        "overall": 61.347709,
+        "ci95": [
+          57.751264,
+          64.857706
+        ],
+        "tagged": 62.201944,
+        "untagged": 59.400763
+      },
+      "tag_integrity": {
+        "ok": 100,
+        "n": 100,
+        "pct": 100.0,
+        "failed_ids": []
+      },
+      "protected_intact": {
+        "ok": 6,
+        "n": 6,
+        "pct": 100.0,
+        "failed_ids": []
+      },
+      "term_accuracy": {
+        "ok": 53,
+        "n": 55,
+        "pct": 96.363636,
+        "failed_ids": [
+          "salesforce_localization_xml_mt:enzh_dev_0000000494",
+          "salesforce_localization_xml_mt:enzh_dev_0000000719"
+        ]
+      },
+      "ui_label_accuracy": {
+        "ok": 31,
+        "n": 31,
+        "pct": 100.0,
+        "failed_ids": []
+      },
+      "gate_pass": {
+        "ok": 198,
+        "n": 200,
+        "pct": 99.0,
+        "failed_ids": [
+          "salesforce_localization_xml_mt:enzh_dev_0000000494",
+          "salesforce_localization_xml_mt:enzh_dev_0000000719"
+        ]
+      },
+      "routed": {
+        "count": 2,
+        "n": 200,
+        "pct": 1.0
+      },
+      "edit": null,
+      "cost": {
+        "total_usd": 0.291172,
+        "source_words": 3477,
+        "usd_per_1k_words": 0.083742,
+        "stages": {
+          "translate": {
+            "cost_usd": 0.291172,
+            "input_tokens": 62231,
+            "output_tokens": 16671,
+            "requests": 20,
+            "cached_requests": 0,
+            "seconds": 105.976629
+          }
+        }
+      },
+      "vs_baseline": {
+        "delta": 4.282072,
+        "ci95": [
+          2.510395,
+          6.118426
+        ],
+        "share_le_0": 0.0
+      }
+    }
+  ],
+  "human_reference": {
+    "tag_integrity": {
+      "ok": 99,
+      "n": 100,
+      "pct": 99.0,
+      "failed_ids": [
+        "salesforce_localization_xml_mt:enzh_dev_0000001539"
+      ]
+    },
+    "protected_intact": {
+      "ok": 5,
+      "n": 6,
+      "pct": 83.333333,
+      "failed_ids": [
+        "salesforce_localization_xml_mt:enzh_dev_0000000392"
+      ]
+    },
+    "term_accuracy": {
+      "ok": 55,
+      "n": 55,
+      "pct": 100.0,
+      "failed_ids": []
+    },
+    "ui_label_accuracy": {
+      "ok": 30,
+      "n": 31,
+      "pct": 96.774194,
+      "failed_ids": [
+        "salesforce_localization_xml_mt:enzh_dev_0000000887"
+      ]
+    },
+    "gate_pass": {
+      "ok": 197,
+      "n": 200,
+      "pct": 98.5,
+      "failed_ids": [
+        "salesforce_localization_xml_mt:enzh_dev_0000000392",
+        "salesforce_localization_xml_mt:enzh_dev_0000000887",
+        "salesforce_localization_xml_mt:enzh_dev_0000001539"
+      ]
+    }
+  },
+  "reference_problems": [
+    {
+      "id": "salesforce_localization_xml_mt:enzh_dev_0000000392",
+      "checks": [
+        "protected_content"
+      ],
+      "terminology_only": false,
+      "messages": [
+        "Tag <codeph> content changed: \"community\" missing in target"
+      ]
+    },
+    {
+      "id": "salesforce_localization_xml_mt:enzh_dev_0000000887",
+      "checks": [
+        "ui_label"
+      ],
+      "terminology_only": false,
+      "messages": [
+        "UI label <uicontrol>Debug</uicontrol> must be translated as \"调试\""
+      ]
+    },
+    {
+      "id": "salesforce_localization_xml_mt:enzh_dev_0000001539",
+      "checks": [
+        "tag_nesting"
+      ],
+      "terminology_only": false,
+      "messages": [
+        "Tag <uicontrol> inside <menucascade>: source has 2, target has 1",
+        "Tag <uicontrol> at top level: source has 0, target has 1"
+      ]
+    }
+  ]
+}

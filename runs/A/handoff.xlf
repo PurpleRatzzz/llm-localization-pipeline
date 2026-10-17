@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file original="salesforce-help.xml" source-language="en-US" target-language="zh-CN" datatype="xml">
+    <body>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000000063">
+        <source>Create a Case from a Question in Chatter</source>
+        <target state="needs-review-translation">通过 Chatter 中的问题创建案例</target>
+        <note from="qa" priority="1" annotates="target">[error] terminology: Term "Case" must be translated as "个案", none found in target</note>
+      </trans-unit>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000000162">
+        <source>The activity timeline’s summary for emails saved as tasks is enriched when Enhanced Email is turned on. There are limitations in the activity timeline when logging emails as tasks from Lightning for Outlook and Inbox.</source>
+        <target state="needs-review-translation">启用“增强型电子邮件”后,保存为任务的电子邮件的活动时间线摘要会更加丰富。从 Lightning for Outlook 和 Inbox 将电子邮件记录为任务时,活动时间线存在一些限制。</target>
+        <note from="qa" priority="1" annotates="target">[error] terminology: Term "Enhanced Email" must be translated as "增强电子邮件", none found in target</note>
+      </trans-unit>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000000193">
+        <source>Salesforce sets your package API access privileges to <g id="1" ctype="x-parmname">Unrestricted</g>. You can change this setting to further restrict API access of Salesforce components in the package. For more information, see <g id="2" ctype="x-cite"><g id="3" ctype="x-xref"><g id="4" ctype="x-ph">Manage API and Dynamic Apex Access in Packages</g></g></g>.</source>
+        <target state="needs-review-translation">Salesforce 会将您的包 API 访问权限设置为<g id="1" ctype="x-parmname">不受限制</g>。您可以更改此设置,以进一步限制包中 Salesforce 组件的 API 访问。有关详细信息,请参阅<g id="2" ctype="x-cite"><g id="3" ctype="x-xref"><g id="4" ctype="x-ph">管理包中的 API 和动态 Apex 访问</g></g></g>。</target>
+        <note from="qa" priority="1" annotates="target">[error] ui_label: UI label &lt;parmname&gt;Unrestricted&lt;/parmname&gt; must be translated as "不受限"</note>
+      </trans-unit>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000000299">
+        <source>To remove a member from the library, click <g id="1" ctype="x-uicontrol">Remove</g>. To change a member's library permission, click <g id="2" ctype="x-uicontrol">Edit</g> and choose a new library permission from the drop-down list.</source>
+        <target state="needs-review-translation">要从库中移除成员,请单击<g id="1" ctype="x-uicontrol">移除</g>。要更改成员的库权限,请单击<g id="2" ctype="x-uicontrol">编辑</g>,然后从下拉列表中选择新的库权限。</target>
+        <note from="qa" priority="1" annotates="target">[error] ui_label: UI label &lt;uicontrol&gt;Remove&lt;/uicontrol&gt; must be translated as "删除"</note>
+      </trans-unit>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000000358">
+        <source>Deleting campaign member record types updates the <g id="1" ctype="x-parmname">Campaign Member Type</g> field on campaign and campaign member records.</source>
+        <target state="needs-review-translation">删除营销活动成员记录类型会更新营销活动和营销活动成员记录上的<g id="1" ctype="x-parmname">营销活动成员类型</g>字段。</target>
+        <note from="qa" priority="1" annotates="target">[error] ui_label: UI label &lt;parmname&gt;Campaign Member Type&lt;/parmname&gt; must be translated as "市场活动成员类型"</note>
+      </trans-unit>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000000493">
+        <source>If selected, the named org allows change sets to be sent to it from the org you are currently logged into.</source>
+        <target state="needs-review-translation">如果选中,指定的组织将允许从您当前登录的组织向其发送变更集。</target>
+        <note from="qa" priority="1" annotates="target">[error] terminology: Term "change sets" must be translated as "更改集", none found in target</note>
+      </trans-unit>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000000534">
+        <source>This component provides similar functionality to the Case Milestone tracker in Salesforce Classic. To add this component, your org must have entitlements, an entitlement process, and milestones set up. The component supports only Case Milestones and doesn’t support Object Milestones. You can add it only to case pages.</source>
+        <target state="needs-review-translation">此组件提供的功能与 Salesforce Classic 中的案例里程碑跟踪器类似。要添加此组件,您的组织必须已设置权利、权利流程和里程碑。该组件仅支持案例里程碑,不支持对象里程碑。您只能将其添加到案例页面。</target>
+        <note from="qa" priority="1" annotates="target">[error] terminology: Term "Case" must be translated as "个案", none found in target</note>
+      </trans-unit>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000000617">
+        <source>Since Kimmy added the topics <g id="1" ctype="x-parmname">Sales Training</g>, <g id="2" ctype="x-parmname">Western Region</g>, and <g id="3" ctype="x-parmname">Feedback Request</g> to her post, these topics are also added to the file she attached. Now, her coworkers can click a topic to find other posts, files, and records associated with that topic. If the topic is associated with records other than files, go to the <g id="4" ctype="x-uicontrol">Records</g> tab and choose <g id="5" ctype="x-uicontrol">Files</g>. Otherwise, use the <g id="6" ctype="x-uicontrol">Feeds</g> tab to see all posts and files for the topic.</source>
+        <target state="needs-review-translation">由于 Kimmy 在her 帖子中添加了主题 <g id="1" ctype="x-parmname">Sales Training</g>、<g id="2" ctype="x-parmname">Western Region</g> 和 <g id="3" ctype="x-parmname">Feedback Request</g>,这些主题也会添加到她附加的文件中。现在,她的同事可以单击某个主题来查找与该主题相关联的其他帖子、文件和记录。如果该主题与文件以外的记录相关联,请转到<g id="4" ctype="x-uicontrol">记录</g>选项卡并选择<g id="5" ctype="x-uicontrol">文件</g>。否则,请使用<g id="6" ctype="x-uicontrol">动态</g>选项卡查看该主题的所有帖子和文件。</target>
+        <note from="qa" priority="1" annotates="target">[error] ui_label: UI label &lt;uicontrol&gt;Feed&lt;/uicontrol&gt; must be translated as "摘要"</note>
+        <note from="qa" priority="5" annotates="target">[warning] cjk_latin_spacing: Missing space between Chinese and Latin text at "在h"</note>
+      </trans-unit>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000000849">
+        <source>Select the date range you want to view either by entering the date and clicking <g id="1" ctype="x-uicontrol">Go!</g>, or by selecting <g id="2" ctype="x-uicontrol">Previous Range</g> or <g id="3" ctype="x-uicontrol">Next Range</g>.</source>
+        <target state="needs-review-translation">通过输入日期并单击<g id="1" ctype="x-uicontrol">开始!</g>,或选择<g id="2" ctype="x-uicontrol">上一范围</g>或<g id="3" ctype="x-uicontrol">下一范围</g>,选择要查看的日期范围。</target>
+        <note from="qa" priority="1" annotates="target">[error] ui_label: UI label &lt;uicontrol&gt;Go!&lt;/uicontrol&gt; must be translated as "执行!"</note>
+      </trans-unit>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000001041">
+        <source>Set up and monitor your community from <g id="1" ctype="x-ph">Community Management</g> or <g id="2" ctype="x-ph">Community Workspaces</g>.</source>
+        <target state="needs-review-translation">从<g id="1" ctype="x-ph">社区管理</g>或<g id="2" ctype="x-ph">社区工作空间</g>设置和监控您的社区。</target>
+        <note from="qa" priority="1" annotates="target">[error] terminology: Term "Community Workspaces" must be translated as "社区工作区", none found in target</note>
+      </trans-unit>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000001287">
+        <source>Available in: <g id="1" ctype="x-b">Developer</g>, <g id="2" ctype="x-b">Enterprise</g>, <g id="3" ctype="x-b">Performance</g>, and <g id="4" ctype="x-b">Unlimited</g> Editions</source>
+        <target state="needs-review-translation">适用版本:<g id="1" ctype="x-b">Developer</g>、<g id="2" ctype="x-b">Enterprise</g>、<g id="3" ctype="x-b">Performance</g> 和 <g id="4" ctype="x-b">Unlimited</g> Edition</target>
+        <note from="qa" priority="1" annotates="target">[error] terminology: Term "Available" must be translated as "可用" / "适用于", none found in target</note>
+      </trans-unit>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000001468">
+        <source>The <g id="1" ctype="x-parmname">Indicate Document is Internal</g> and <g id="2" ctype="x-parmname">Externally Available Image</g> checkboxes are mutually exclusive; you cannot select both.</source>
+        <target state="needs-review-translation"><g id="1" ctype="x-parmname">指示文档为内部文档</g>和<g id="2" ctype="x-parmname">可外部使用的图像</g>复选框互斥;您不能同时选中这两项。</target>
+        <note from="qa" priority="1" annotates="target">[error] ui_label: UI label &lt;parmname&gt;Externally Available Image&lt;/parmname&gt; must be translated as "外部可用图像"</note>
+      </trans-unit>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000001635">
+        <source>The filter criteria for this approval process is <g id="1" ctype="x-userinput"><g id="2" ctype="x-parmname">Discount Percent</g> greater or equal 0.4</g>. Records must meet this criteria before they can be submitted to this approval process.</source>
+        <target state="needs-review-translation">此审批流程的筛选条件为 <g id="1" ctype="x-userinput"><g id="2" ctype="x-parmname">Discount Percent</g> greater or equal 0.4</g>。记录必须满足此条件,才能提交到此审批流程。</target>
+        <note from="qa" priority="1" annotates="target">[error] ui_label: UI label &lt;parmname&gt;Discount Percent&lt;/parmname&gt; must be translated as "折扣百分比"</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

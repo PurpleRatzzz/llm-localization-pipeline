@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file original="salesforce-help.xml" source-language="en-US" target-language="zh-CN" datatype="xml">
+    <body>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000000494">
+        <source>To post Site or Community URLs for articles into the case feed , you must have the <g id="1" ctype="x-xref">Knowledge sidebar enabled in the Service Console</g> and either a <g id="2" ctype="x-xref">Salesforce Site</g> or <g id="3" ctype="x-xref">Community</g> setup.</source>
+        <target state="needs-review-translation">要将文章的站点或社区 URL 发布到个案动态中，您必须<g id="1" ctype="x-xref">在 Service 控制台中启用 Knowledge 边栏</g>，并设置 <g id="2" ctype="x-xref">Salesforce 站点</g>或<g id="3" ctype="x-xref">社区</g>。</target>
+        <note from="qa" priority="1" annotates="target">[error] terminology: Term "Service" must be translated as "服务", none found in target</note>
+      </trans-unit>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000000719">
+        <source>Service Community Scorecard</source>
+        <target state="needs-review-translation">Service 社区记分卡</target>
+        <note from="qa" priority="1" annotates="target">[error] terminology: Term "Service" must be translated as "服务", none found in target</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
