@@ -233,6 +233,42 @@ def drop_nested(postings):
     return keep
 
 
+def overlaps(a, b):
+    """True if two Chinese strings share 2+ consecutive characters."""
+    return any(a[i:i + 2] in b for i in range(len(a) - 1))
+
+
+def distinct_alternatives(scored, chosen, limit=3):
+    """Other translations worth showing the reviewer, most used first.
+
+    The candidates are raw substrings (Chinese has no spaces to split words
+    on), so 然后选择 / 然后选 / 后选择 are three cuts of one phrase.
+    1. Drop the chosen string and its fragments, but keep longer forms that
+       contain it (详细信息页面 for 详细信息页).
+    2. Group strings that overlap: cuts of the same phrase.
+    3. Show one string per group: the longest one used nearly as often (80%+)
+       as the group's most used string, so the full phrase beats its cuts.
+    Groups are ranked by hit rate (how often human translators used them), so
+    a frequent true translation such as 设置 shows up even when its Dice is low.
+    """
+    pool = [s for s in scored if s[1] != chosen and (chosen in s[1] or not overlaps(s[1], chosen))]
+    groups = []
+    for cand in sorted(pool, key=lambda s: (-s[2], s[1])):
+        # A string can join two groups ("然后选择" links "然后" and "选择"):
+        # merge every group it overlaps into one.
+        joined = [g for g in groups if any(overlaps(cand[1], member[1]) for member in g)]
+        merged = [cand] + [member for g in joined for member in g]
+        groups = [g for g in groups if g not in joined]
+        groups.append(sorted(merged, key=lambda s: (-s[2], s[1])))
+    groups.sort(key=lambda g: (-g[0][2], g[0][1]))   # most used group first
+    picked = []
+    for group in groups[:limit]:
+        top_hit = group[0][2]
+        picked.append(max((m for m in group if m[2] >= 0.8 * top_hit),
+                          key=lambda m: (len(m[1]), m[2])))
+    return picked
+
+
 def text_candidates(train_rows, eval_rows):
     eval_terms = Counter(t for row in eval_rows for t in english_terms(running_text(row["source"])))
     src_text = [running_text(row["source"]) for row in train_rows]
@@ -287,8 +323,7 @@ def text_candidates(train_rows, eval_rows):
         dice, zh, hit = max((s for s in scored if s[0] >= best - 0.03), key=lambda s: len(s[1]))
         if hit < MIN_HIT:
             continue
-        # Alternatives worth showing a reviewer: not fragments of the chosen string.
-        others = sorted((s for s in scored if s[1] not in zh), reverse=True)[:3]
+        others = distinct_alternatives(scored, zh)
         auto = hit >= TEXT_AUTO_HIT and dice >= TEXT_AUTO_DICE and len(segs) >= TEXT_AUTO_COUNT
         rows.append({
             "scope": "text", "source": term, "target": zh,
@@ -323,7 +358,37 @@ def evidence(row):
     return text + (f"; alternatives: {row['alternatives']}" if row["alternatives"] else "")
 
 
+REVIEW_FIELDS = ["scope", "source", "target", "kind", "note", "review", "evidence"]
+
+
+def update_review(shortlist):
+    """Write the reviewer's file without ever overwriting a decision.
+
+    First run: the file is created from the shortlist. Later runs: for rows
+    already in the file only "evidence" is refreshed; target, kind, note and
+    review stay as the reviewer left them, deleted rows stay deleted, and rows
+    the reviewer added are kept. New shortlist entries are only reported.
+    """
+    fresh = {(r["scope"], r["source"]): r for r in shortlist}
+    if not REVIEW_OUT.exists():
+        rows = [{"scope": r["scope"], "source": r["source"], "target": r["target"],
+                 "kind": r["kind"], "note": "", "review": r["review"], "evidence": evidence(r)}
+                for r in shortlist]
+        write_csv(REVIEW_OUT, rows, REVIEW_FIELDS)
+        return rows, []
+    with open(REVIEW_OUT, encoding="utf-8-sig", newline="") as f:
+        rows = list(csv.DictReader(f))
+    for row in rows:
+        key = (row["scope"], row["source"])
+        if key in fresh:
+            row["evidence"] = evidence(fresh[key])
+    present = {(row["scope"], row["source"]) for row in rows}
+    write_csv(REVIEW_OUT, rows, REVIEW_FIELDS)
+    return rows, [key for key in fresh if key not in present]
+
+
 def main():
+    candidates_only = "--candidates-only" in sys.argv[1:]
     train_rows = load_jsonl(TRAIN)
     eval_rows = [row for path in EVAL_SETS for row in load_jsonl(path)]
 
@@ -332,21 +397,19 @@ def main():
     candidates = sorted(ui, key=lambda r: -r["eval_segments"]) + \
         sorted(text, key=lambda r: -r["eval_segments"])
     write_csv(CANDIDATES_OUT, candidates, list(candidates[0].keys()))
+    print(f"{len(ui)} ui and {len(text)} text candidates written to "
+          f"{CANDIDATES_OUT.relative_to(REPO_ROOT)}")
+    if candidates_only:
+        return
 
     # Reviewer shortlist: every relevant UI label, and text terms in 2+ eval segments.
-    review = [r for r in candidates if r["scope"] == "ui" or r["eval_segments"] >= REVIEW_MIN_EVAL]
-    write_csv(REVIEW_OUT,
-              [{"scope": r["scope"], "source": r["source"], "target": r["target"],
-                "kind": r["kind"], "note": "", "review": r["review"], "evidence": evidence(r)}
-               for r in review],
-              ["scope", "source", "target", "kind", "note", "review", "evidence"])
-
-    for scope, rows in (("ui", ui), ("text", text)):
-        short = [r for r in review if r["scope"] == scope]
-        print(f"{scope:<4}: {len(rows)} candidates; shortlist {len(short)} "
-              f"({sum(r['kind'] == 'required' for r in short)} required, "
-              f"{sum(r['review'] == 'auto' for r in short)} auto-approved)")
-    print(f"Written to {CANDIDATES_OUT.relative_to(REPO_ROOT)} and {REVIEW_OUT.relative_to(REPO_ROOT)}")
+    shortlist = [r for r in candidates if r["scope"] == "ui" or r["eval_segments"] >= REVIEW_MIN_EVAL]
+    rows, new = update_review(shortlist)
+    print(f"{REVIEW_OUT.relative_to(REPO_ROOT)}: {len(rows)} rows "
+          f"({sum(r['review'] == 'todo' for r in rows)} to review)")
+    if new:
+        print("Shortlist entries not in the review file (not added):",
+              ", ".join(f"{scope}:{source}" for scope, source in new))
 
 
 if __name__ == "__main__":
