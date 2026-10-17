@@ -1,7 +1,8 @@
 # zh-CN Style Rules
 
-Status: DRAFT, derived from the 2000 dev-set human references. Pending review by
-the zh-CN reviewer (Yanlin Chen). See "Open questions" at the end.
+Status: reviewed by the zh-CN reviewer (Yanlin Chen) on 2026-10-17. Derived
+from the 2000 dev-set human references, plus three reviewer decisions (R11-R13)
+where the references are inconsistent.
 
 The `## Rules` section is inserted verbatim into the translate, edit and verify
 prompts. The `## Evidence` section is for humans and is not sent to the model.
@@ -50,6 +51,17 @@ Write numbers as digits; large numbers follow Chinese grouping
 
 R10. Faithfulness: do not add, omit or explain content that is not in the source.
 
+R11. "account" meaning a login, user or service account → 账户 (not 帐户).
+The Salesforce Account object is 客户 (see the glossary).
+
+R12. "your org" / "your organization" → 贵组织.
+
+R13. Instructions written as sentences start with 请:
+"Click <uicontrol>Save</uicontrol>." → "请单击<uicontrol>保存</uicontrol>。"
+"To add a user, click New." → "要添加用户，请单击“新建”。"
+Headings and labels are not instructions and get no 请:
+"Enable Task Notifications" → "启用任务通知"
+
 ## Evidence
 
 Counts are over the 2000 dev-set references (`data/raw/enzh_zh_dev.json`).
@@ -64,12 +76,19 @@ Counts are over the 2000 dev-set references (`data/raw/enzh_zh_dev.json`).
 | R6 | 单击 111 vs 点击 4 segments |
 | R7 | Space present in 1777 of 1779 CJK-Latin adjacencies (99.9%), measured by the QA gate calibration (`cjk_latin_spacing`) |
 | R8 | All 2000 references are unchanged by Unicode NFKC normalization, and NFKC turns ，（）：；？！ into half-width forms while keeping 。、“”. That matches the references exactly (，0 vs , 1396; 。1865), so the half-width marks come from dataset preprocessing, not from a style choice. Evaluation applies NFKC to both sides. When the English has no terminal punctuation, the reference ends with 。 in only 9 of 774 cases |
+| R11 | Reviewer decision. The references are inconsistent (帐户 17, 账户 6); 账户 follows current standard usage (账 for accounts and records, 帐 for tents and curtains). Deliberately differs from most references, which slightly lowers chrF |
+| R12 | Reviewer decision. Of 38 references for "your org/organization", 19 use 贵组织 and 14 use 您的组织 |
+| R13 | Reviewer decision for a consistent, polite instruction style. The references use 请 inconsistently: in 15 of 50 "To X, do Y" sentences and 13 of 222 sentences starting with an imperative. Deliberately differs from most references, which slightly lowers chrF |
 | R9 | Placeholders: 42/42 `#URL1#` and 4/4 merge fields kept (QA gate calibration). Numbers: 10 of the 11 references whose digits differ from the source are correct localizations (three → 3, 10 million → 1000 万). The first wording ("keep every number unchanged") made the AI verifier flag a correct 1000 万 as a major error |
 
-## Open questions for the reviewer
+## Reviewer decisions
 
-1. 帐户 or 账户 for "account" in the sense of a login account? References use
-   both (帐户 17, 账户 6).
-2. "your org": 贵组织 (23) or 您的组织 (14)? References use both.
-3. Should imperative instructions start with 请? References use it in 79
-   segments, but not consistently.
+Decided by the zh-CN reviewer on 2026-10-17, where the references disagree:
+
+1. Login account: 账户 (R11).
+2. "your org": 贵组织 (R12).
+3. Instructions: always 请 (R13).
+
+R11 and R13 knowingly move away from the majority of the references. chrF
+measures closeness to those references, so it cannot reward these choices;
+the README notes this limitation.
