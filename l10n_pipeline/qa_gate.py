@@ -277,6 +277,42 @@ def term_pattern(term: str) -> str:
     return before + r"(?:" + "|".join(forms) + r")" + after
 
 
+def _running_text(source: str) -> str:
+    """The source text where "text" glossary terms are matched: outside
+    protected and UI tags."""
+    root, _ = parse_fragment(source)
+    if root is not None:
+        return "".join(text_nodes(root, skip_protected=True, skip_ui=True))
+    # Not XML (e.g. a UI string with a literal "&"): use the text as it is.
+    return "".join(_fallback_text_nodes(source))
+
+
+CAPITALIZED_WORD = r"[A-Z][\w'-]*"
+
+
+def _kept_in_english(term: str, text: str, target_text: str) -> bool:
+    """True if every occurrence of `term` is part of a longer capitalized name
+    that the target keeps in English, as style rule R2 asks for product names:
+    "Mobile" in "Salesforce Mobile Classic", "Data" in "Data Loader".
+
+    Measured on the 2000 dev references: without this, such names made 12.5%
+    of glossary term occurrences in correct human translations fail. A term
+    left in English on its own ("打开 Account") still fails.
+    """
+    pattern = re.compile(rf"((?:{CAPITALIZED_WORD}\s+)*)({term_pattern(term)})((?:\s+{CAPITALIZED_WORD})*)")
+    matches = list(pattern.finditer(text))
+    for match in matches:
+        before, core, after = match.group(1).split(), match.group(2), match.group(3).split()
+        # Every multi-word span around the term: "Salesforce Communities" is
+        # kept in "Salesforce Communities 软件包" although "Package" is translated.
+        names = [" ".join(before[i:] + [core] + after[:j])
+                 for i in range(len(before) + 1) for j in range(len(after) + 1)
+                 if len(before) - i + j >= 1]
+        if not any(name in target_text for name in names):
+            return False
+    return bool(matches)
+
+
 def find_terms(source: str, glossary: list[GlossaryEntry]) -> list[GlossaryEntry]:
     """"text"-scope glossary entries (any kind) whose term occurs in the running
     text of `source`, longest match first. Text inside protected tags and UI
@@ -289,13 +325,7 @@ def find_terms(source: str, glossary: list[GlossaryEntry]) -> list[GlossaryEntry
     潜在客户 but "lead to" -> 导致). Whole words only; plurals +s, +es, and
     consonant+y -> ies are accepted.
     """
-    root, _ = parse_fragment(source)
-    if root is not None:
-        text = "".join(text_nodes(root, skip_protected=True, skip_ui=True))
-    else:
-        # Not XML (e.g. a UI string with a literal "&"): use the text as it is.
-        text = "".join(_fallback_text_nodes(source))
-
+    text = _running_text(source)
     found = []
     claimed = []   # character spans already matched by a longer term
     text_entries = [e for e in glossary if e.scope == "text"]
@@ -324,8 +354,10 @@ def check_terminology(source: str, target_text: str,
     # targets): the target must use one of them. For an ambiguous entry the
     # choice between them needs judgement, which the editor and verifier get.
     issues = []
+    text = _running_text(source)
     for entry in find_terms(source, glossary):
-        if not any(t in target_text for t in entry.targets):
+        if not any(t in target_text for t in entry.targets) \
+                and not _kept_in_english(entry.source, text, target_text):
             issues.append(Issue("terminology", "error",
                                 f'Term "{entry.source}" must be translated as '
                                 f'{_allowed(entry)}, none found in target'))

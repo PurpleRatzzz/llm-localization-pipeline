@@ -424,3 +424,18 @@ def test_whole_ui_string_is_a_ui_label():
     assert checks(check_segment("Save", "存储", glossary=UI_GLOSSARY, content_type="ui"),
                   "error") == ["ui_label"]
     assert check_segment("Save", "保存", glossary=UI_GLOSSARY, content_type="ui") == []
+
+
+def test_term_inside_a_name_kept_in_english_passes():
+    # dev references keep product names in English (style rule R2): "Mobile"
+    # inside "Salesforce Mobile Classic" must not demand 移动.
+    glossary = [GlossaryEntry("Mobile", "移动"), GlossaryEntry("Account", "客户"),
+                GlossaryEntry("Community", "社区")]
+    assert check_segment("Set the Salesforce Mobile Classic timeout.",
+                         "设置 Salesforce Mobile Classic 超时。", glossary=glossary) == []
+    # Part of the name kept, the rest translated: "Salesforce Communities 软件包".
+    assert check_segment("Install the Salesforce Communities Package.",
+                         "安装 Salesforce Communities 软件包。", glossary=glossary) == []
+    # A term left in English on its own is still an error.
+    issues = check_segment("Open the Account.", "打开 Account。", glossary=glossary)
+    assert checks(issues, "error") == ["terminology"]
