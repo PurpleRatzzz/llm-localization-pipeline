@@ -231,20 +231,20 @@ def gate_metrics(rows: list[dict], targets: list[str], glossary) -> dict:
             if "protected_content" in errors or "xml_wellformed" in errors:
                 protected_failed.append(row["id"])
 
-        # Same rule as the gate: one terminology error per required term that
-        # occurs in the source but whose approved translation is missing.
-        required = [e for e in qa_gate.find_terms(row["source"], glossary) if e.kind == "required"]
+        # Same rule as the gate: every glossary entry found in the source is
+        # checked (required and ambiguous alike, each against its listed
+        # translations), with one terminology error per entry not satisfied.
+        checked = qa_gate.find_terms(row["source"], glossary)
         missed = errors.count("terminology")
-        n_term_pairs += len(required)
+        n_term_pairs += len(checked)
         n_term_missed += missed
         if missed:
             term_failed.append(row["id"])
 
-        # UI labels: one ui_label error per required label the target lacks.
-        ui_required = [e for _, e in qa_gate.find_ui_labels(row["source"], glossary)
-                       if e.kind == "required"]
+        # UI labels: one ui_label error per glossary label the target lacks.
+        ui_checked = qa_gate.find_ui_labels(row["source"], glossary)
         ui_missed = errors.count("ui_label")
-        n_ui_pairs += len(ui_required)
+        n_ui_pairs += len(ui_checked)
         n_ui_missed += ui_missed
         if ui_missed:
             ui_failed.append(row["id"])
@@ -425,8 +425,8 @@ def markdown_report(results: dict) -> str:
     out += ["", f"Denominators: tag integrity over the {ref['tag_integrity']['n']} tagged "
             f"segments; protected intact over the {ref['protected_intact']['n']} segments with "
             f"a protected tag (a small sample); UI labels over "
-            f"{ref['ui_label_accuracy']['n']} (segment, required label) pairs; terms in text over "
-            f"{ref['term_accuracy']['n']} (segment, required term) pairs; gate pass and routing "
+            f"{ref['ui_label_accuracy']['n']} (segment, glossary label) pairs; terms in text over "
+            f"{ref['term_accuracy']['n']} (segment, glossary term) pairs; gate pass and routing "
             f"over all {golden['segments']} segments."]
 
     out += ["", f"## Paired comparison with the baseline ({baseline})", ""]
@@ -486,8 +486,8 @@ def markdown_report(results: dict) -> str:
                        "references). A correct translation can disagree with them, so chrF "
                        "and the QA metrics are unreliable on these segments.")
         if any(problem["terminology_only"] for problem in problems):
-            out.append("- Terminology only: the reference does not use the glossary's required "
-                       "term (the calibration ran without a glossary). These keep the human "
+            out.append("- Terminology only: the reference uses none of the glossary's "
+                       "translations for a term (the calibration ran without a glossary). These keep the human "
                        "reference below 100% term accuracy.")
 
     glossary = results["glossary"]
@@ -520,23 +520,24 @@ def markdown_report(results: dict) -> str:
             f"{'/'.join(f'`{t}`' for t in sorted(qa_gate.PROTECTED_TAGS))} element, with no "
             "`protected_content` error. A target that is not well-formed XML counts as not "
             "intact, because its protected text cannot be checked.",
-            "  - *UI labels*: (segment, required label) pairs where the whole text of a "
+            "  - *UI labels*: (segment, glossary label) pairs where the whole text of a "
             "`uicontrol`/`parmname` in the source is a \"ui\" glossary label (`find_ui_labels`); "
-            "correct = a target tag of the same kind has exactly the approved translation "
+            "correct = a target tag of the same kind has exactly one of the listed translations "
             "(no `ui_label` error).",
-            "  - *Terms in text*: (segment, required term) pairs where the gate's `find_terms` "
+            "  - *Terms in text*: (segment, glossary term) pairs where the gate's `find_terms` "
             "finds a \"text\" glossary term in the running text of the source (outside UI and "
-            "code tags); correct = the approved translation appears in the target (no "
+            "code tags); correct = one of its listed translations appears in the target (no "
             "`terminology` error for it).",
             "  - *Gate pass*: segments with no error-level issue. The gate checks format, "
-            "protected content and required terms, not meaning or fluency: it is a routing "
+            "protected content and glossary terms, not meaning or fluency: it is a routing "
             "filter, not a quality score.",
             "- **Routed to review**: share of segments the run itself sent to human review "
             "(`status` = `needs_review`): any gate error, plus error-level verifier findings "
             "when the verify stage runs.",
             f"- **Glossary**: `{glossary['file']}`, {glossary['entries']} entries, "
-            f"{glossary['required']} required. Only required terms are enforced; ambiguous "
-            "ones are shown to the model with a note but not checked.",
+            f"{glossary['required']} required. Every entry is a closed set of acceptable "
+            "translations (`target` may list several, separated by `|`) and is enforced by the "
+            "gate; for ambiguous entries the editor also double-checks the choice.",
             "- **Cost**: from each run's `summary.json`, computed from the API token counts of "
             "every request (a request served from the local cache reports the cost of its "
             f"original call). $ / 1k words uses the {golden['source_words']:,} source words of "

@@ -25,8 +25,7 @@ class Unit:
 
 @dataclass
 class GlossaryEntry:
-    """One approved term. Only "required" terms are enforced by the QA gate;
-    "ambiguous" terms are shown to the model as candidates with a usage note.
+    """One approved term.
 
     scope "ui": a UI label, matched against the whole text of a <uicontrol> or
     <parmname> (docs must cite UI strings exactly). scope "text": a term in
@@ -35,10 +34,19 @@ class GlossaryEntry:
     """
 
     source: str
-    target: str
+    target: str     # one or more acceptable translations separated by "|"; the first is preferred
     kind: Literal["required", "ambiguous"] = "required"
     note: str = ""
     scope: Literal["ui", "text"] = "text"
+
+    @property
+    def targets(self) -> list[str]:
+        """All acceptable translations. Every entry is enforced by the gate
+        against this closed set. "required": any of them is fine (variants
+        such as 详细信息页面|详细信息页). "ambiguous": the right one depends on
+        context, so a choice from the set is also shown to the editor with
+        the note to double-check."""
+        return [t.strip() for t in self.target.split("|") if t.strip()]
 
 
 @dataclass

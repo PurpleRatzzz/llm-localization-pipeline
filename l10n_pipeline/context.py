@@ -41,10 +41,13 @@ def _lines(entries: list[GlossaryEntry]) -> str:
     unique = {e.source: e for e in entries}
     lines = []
     for e in sorted(unique.values(), key=lambda e: e.source.lower()):
+        first, *others = e.targets
         if e.kind == "required":
-            lines.append(f"- {e.source} → {e.target} (required)")
+            also = f"; also acceptable: {' / '.join(others)}" if others else ""
+            lines.append(f"- {e.source} → {first} (required{also})")
         else:
-            lines.append(f"- {e.source} → usually {e.target}; {e.note or 'choose by context'}")
+            lines.append(f"- {e.source} → one of: {' / '.join(e.targets)}. "
+                         f"{e.note or 'Choose by context.'}")
     return "\n".join(lines)
 
 

@@ -314,17 +314,21 @@ def find_terms(source: str, glossary: list[GlossaryEntry]) -> list[GlossaryEntry
     return found
 
 
+def _allowed(entry: GlossaryEntry) -> str:
+    return " / ".join(f'"{t}"' for t in entry.targets)
+
+
 def check_terminology(source: str, target_text: str,
                       glossary: list[GlossaryEntry]) -> list[Issue]:
+    # Every entry is a closed set of acceptable translations (GlossaryEntry.
+    # targets): the target must use one of them. For an ambiguous entry the
+    # choice between them needs judgement, which the editor and verifier get.
     issues = []
     for entry in find_terms(source, glossary):
-        # Ambiguous terms still claim their words inside find_terms (so a longer
-        # ambiguous term hides a shorter required one), but only required terms
-        # are enforced: ambiguous ones need judgement, not a rule.
-        if entry.kind == "required" and entry.target not in target_text:
+        if not any(t in target_text for t in entry.targets):
             issues.append(Issue("terminology", "error",
                                 f'Term "{entry.source}" must be translated as '
-                                f'"{entry.target}", not found in target'))
+                                f'{_allowed(entry)}, none found in target'))
     return issues
 
 
@@ -361,17 +365,21 @@ def find_ui_labels(source: str, glossary: list[GlossaryEntry]) -> list[tuple[str
 
 def check_ui_labels(source: str, tgt_root: ET.Element,
                     glossary: list[GlossaryEntry]) -> list[Issue]:
-    # Each required label must appear as the whole text of a target tag of the
-    # same kind. Comparing as a multiset (not position by position) allows
-    # Chinese word order to move the tags.
-    found = find_ui_labels(source, glossary)
-    expected = Counter((tag, entry.target) for tag, entry in found if entry.kind == "required")
-    english = {(tag, entry.target): entry.source for tag, entry in found}   # for the message
-    missing = expected - Counter(_ui_labels(tgt_root))
-    return [Issue("ui_label", "error",
-                  f'UI label <{tag}>{english[(tag, zh)]}</{tag}> must be translated '
-                  f'as <{tag}>{zh}</{tag}>')
-            for tag, zh in missing.elements()]
+    # Each glossary label in the source must appear as the whole text of a
+    # target tag of the same kind, using one of its acceptable translations.
+    # Target tags are consumed like a multiset, not compared position by
+    # position, so Chinese word order may move them.
+    available = Counter(_ui_labels(tgt_root))
+    issues = []
+    for tag, entry in find_ui_labels(source, glossary):
+        used = next((t for t in entry.targets if available[(tag, t)] > 0), None)
+        if used:
+            available[(tag, used)] -= 1
+        else:
+            issues.append(Issue("ui_label", "error",
+                                f"UI label <{tag}>{entry.source}</{tag}> must be translated "
+                                f"as {_allowed(entry)}"))
+    return issues
 
 
 def check_length(source_text: str, target_text: str, max_length: int | None,
@@ -428,9 +436,9 @@ def check_segment(source: str, target: str, *, glossary: list[GlossaryEntry] | N
         src_free, tgt_free = source, target
         # A whole UI string is itself a UI label: "Save" must become 保存.
         entry = _ui_entry(source.strip(), glossary or [])
-        if entry and entry.kind == "required" and target.strip() != entry.target:
+        if entry and target.strip() not in entry.targets:
             issues.append(Issue("ui_label", "error",
-                                f'UI label "{source.strip()}" must be translated as "{entry.target}"'))
+                                f'UI label "{source.strip()}" must be translated as {_allowed(entry)}'))
     else:
         src_root, src_error = parse_fragment(source)
         tgt_root, tgt_error = parse_fragment(target)

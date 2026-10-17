@@ -105,7 +105,8 @@ def translate(units: list[Unit], context: str) -> tuple[dict[str, str], llm.LLMR
 
 
 def edit(units: list[Unit], drafts: dict[str, str], findings: dict[str, list[Issue]],
-         context: str) -> tuple[dict[str, str], llm.LLMResponse]:
+         context: str, choices: dict[str, list[str]] | None = None
+         ) -> tuple[dict[str, str], llm.LLMResponse]:
     items = []
     for unit in units:
         item = _unit_payload(unit)
@@ -117,6 +118,10 @@ def edit(units: list[Unit], drafts: dict[str, str], findings: dict[str, list[Iss
         # back into "10 million".
         item["qa_findings"] = [f"{i.check}: {i.message}"
                                for i in findings[unit.id] if i.severity == "error"]
+        # Context-dependent terms where the draft picked one of the approved
+        # options: the gate cannot judge the choice, the editor can.
+        if choices and choices.get(unit.id):
+            item["term_choices"] = choices[unit.id]
         items.append(item)
     response = llm.call_json(
         system=_system_prompt("edit", context),

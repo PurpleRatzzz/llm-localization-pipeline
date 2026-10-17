@@ -18,7 +18,8 @@ from pathlib import Path
 
 from l10n_pipeline import context as ctx
 from l10n_pipeline import llm, stages, tm
-from l10n_pipeline.qa_gate import check_segment, parse_fragment, passed, text_nodes
+from l10n_pipeline.qa_gate import (check_segment, find_terms, find_ui_labels, parse_fragment,
+                                   passed, text_nodes)
 from l10n_pipeline.units import GlossaryEntry, Issue, Result, Unit
 
 CONFIGS = {
@@ -72,6 +73,22 @@ def gate(unit: Unit, target: str, glossary: list[GlossaryEntry]) -> list[Issue]:
                          max_length=unit.max_length, content_type=unit.content_type)
 
 
+def term_choices(unit: Unit, draft: str, glossary: list[GlossaryEntry]) -> list[str]:
+    """Ambiguous entries the draft satisfies with one of their options.
+
+    The gate only knows the choice is in the approved set, not whether it
+    fits this context, so the editor double-checks it against the note.
+    """
+    entries = find_terms(unit.source, glossary) + [e for _, e in find_ui_labels(unit.source, glossary)]
+    hints = {}
+    for e in entries:
+        used = [t for t in e.targets if t in draft]
+        if e.kind == "ambiguous" and used:
+            hints[e.source] = (f'"{e.source}": the draft uses {used[0]}; options: '
+                               f'{" / ".join(e.targets)}. {e.note}').strip()
+    return list(hints.values())
+
+
 def _errors(issues: list[Issue]) -> set[tuple[str, str]]:
     return {(i.check, i.message) for i in issues if i.severity == "error"}
 
@@ -93,7 +110,8 @@ def process_batch(units: list[Unit], config: str, glossary: list[GlossaryEntry],
                for u in units}
 
     if cfg["edit"]:
-        edited, response = stages.edit(units, targets, findings, context)
+        choices = {u.id: term_choices(u, targets[u.id], glossary) for u in units}
+        edited, response = stages.edit(units, targets, findings, context, choices)
         stats.add("edit", response)
         for u in units:
             new_target = edited.get(u.id, targets[u.id])

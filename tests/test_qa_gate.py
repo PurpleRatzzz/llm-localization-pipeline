@@ -210,14 +210,14 @@ GLOSSARY = [
     GlossaryEntry("Case", "个案"),
     GlossaryEntry("Opportunity", "业务机会"),
     GlossaryEntry("Key", "密钥"),
-    GlossaryEntry("Territory", "区域", kind="ambiguous", note="also 地区 in maps"),
+    GlossaryEntry("Territory", "区域|地区", kind="ambiguous", note="地区 in maps"),
 ]
 
 
 def test_required_term_missing_is_an_error():
     issues = check_segment("Open the Account.", "打开帐户。", glossary=GLOSSARY)
     assert checks(issues, "error") == ["terminology"]
-    assert issues[0].message == 'Term "Account" must be translated as "客户", not found in target'
+    assert issues[0].message == 'Term "Account" must be translated as "客户", none found in target'
 
 
 def test_required_term_present_passes():
@@ -242,8 +242,20 @@ def test_vowel_y_plural_uses_plain_s():
     assert find_terms("Rotate the Kies.", GLOSSARY) == []
 
 
-def test_ambiguous_term_is_not_enforced():
+def test_ambiguous_term_accepts_any_listed_translation():
+    # Reviewer's design: an ambiguous entry is a closed set of translations.
+    # Any of them passes (the editor double-checks the choice); none fails.
     assert check_segment("Assign the Territory.", "分配地区。", glossary=GLOSSARY) == []
+    assert check_segment("Assign the Territory.", "分配区域。", glossary=GLOSSARY) == []
+    issues = check_segment("Assign the Territory.", "分配领土。", glossary=GLOSSARY)
+    assert checks(issues, "error") == ["terminology"]
+    assert '"区域" / "地区"' in issues[0].message
+
+
+def test_required_term_accepts_listed_variants():
+    variants = [GlossaryEntry("detail page", "详细信息页面|详细信息页")]
+    for target in ("打开详细信息页面。", "在详细信息页中打开。"):
+        assert check_segment("Open the detail page.", target, glossary=variants) == []
 
 
 def test_longest_match_person_account_consumes_account():
@@ -359,7 +371,7 @@ UI_GLOSSARY = [
     GlossaryEntry("Save As", "另存为", scope="ui"),
     GlossaryEntry("New", "新建", scope="ui"),
     GlossaryEntry("Lead", "潜在客户", scope="ui"),
-    GlossaryEntry("View", "视图", kind="ambiguous", scope="ui"),
+    GlossaryEntry("View", "视图|查看", kind="ambiguous", scope="ui"),
 ]
 
 
@@ -390,11 +402,14 @@ def test_ui_labels_may_be_reordered():
 
 
 def test_ui_label_plural_and_ambiguous():
-    # "Leads" (a tab) matches the entry "Lead"; ambiguous labels are not enforced.
+    # "Leads" (a tab) matches the entry "Lead"; an ambiguous label accepts
+    # any of its listed translations and nothing else.
     assert checks(check_segment("Open <uicontrol>Leads</uicontrol>.", "打开<uicontrol>线索</uicontrol>。",
                                 glossary=UI_GLOSSARY), "error") == ["ui_label"]
     assert check_segment("Open <uicontrol>View</uicontrol>.", "打开<uicontrol>查看</uicontrol>。",
                          glossary=UI_GLOSSARY) == []
+    assert checks(check_segment("Open <uicontrol>View</uicontrol>.", "打开<uicontrol>浏览</uicontrol>。",
+                                glossary=UI_GLOSSARY), "error") == ["ui_label"]
 
 
 def test_text_terms_ignore_ui_tags_and_ui_entries():
