@@ -148,6 +148,30 @@ def test_paired_comparison_of_a_run_with_itself_shows_no_difference():
         "delta": 0.0, "ci95": [0.0, 0.0], "share_le_0": 1.0}
 
 
+def test_chrf_by_tm_coverage_groups_and_pairs(tmp_path, monkeypatch):
+    # Pretend the first 4 sample segments have a TM fuzzy match.
+    coverage = tmp_path / "coverage.json"
+    coverage.write_text(json.dumps({"min_score": 75, "with_match": [r["id"] for r in SAMPLE[:4]]}),
+                        encoding="utf-8")
+    monkeypatch.setattr(evaluate, "TM_COVERAGE_FILE", coverage)
+    golden = {row["id"]: row for row in SAMPLE}
+    runs = [write_run(tmp_path / "source", SAMPLE, [r["source"] for r in SAMPLE]),
+            write_run(tmp_path / "reference", SAMPLE, [r["reference"] for r in SAMPLE]),
+            write_run(tmp_path / "mixed", SAMPLE,
+                      [r["reference"] for r in SAMPLE[:4]] + [r["source"] for r in SAMPLE[4:]])]
+    results = evaluate.evaluate(runs, golden, GLOSSARY, extra_pairs=[("reference", "mixed")])
+
+    assert results["tm_coverage"]["groups"] == {"with_match": 4, "without_match": 4}
+    reference = results["runs"][1]["chrf"]["by_tm"]
+    assert reference["with_match"]["chrf"] == pytest.approx(100)
+    assert reference["without_match"]["ci95"] == pytest.approx([100, 100])
+    comparisons = {(c["run"], c["vs"]): c["by_tm"] for c in results["tm_coverage"]["comparisons"]}
+    assert set(comparisons) == {("reference", "source"), ("mixed", "source"), ("reference", "mixed")}
+    # "mixed" equals "reference" where there is a match, so the difference is 0 there.
+    assert comparisons[("reference", "mixed")]["with_match"]["delta"] == pytest.approx(0)
+    assert comparisons[("reference", "mixed")]["without_match"]["delta"] > 50
+
+
 def test_partial_run_is_refused(tmp_path):
     run_dir = write_run(tmp_path / "run", SAMPLE[:3], [row["reference"] for row in SAMPLE[:3]])
     golden = {row["id"]: row for row in SAMPLE}
@@ -188,3 +212,4 @@ def test_whole_script_on_the_real_golden_set(tmp_path):
     report = out.read_text(encoding="utf-8")
     assert "| Human reference |" in report
     assert "## Known reference problems" in report
+    assert "## chrF by translation-memory coverage" in report   # uses data/golden_tm_coverage.json

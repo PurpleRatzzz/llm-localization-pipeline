@@ -29,12 +29,16 @@ segments (`reports/results.md`), plus a blind human review of 30 segments
    over A (95% CI +8.0 to +12.9). On the tune set, switching B from Sonnet 5.5
    to Opus 5.5 added only 0.4 chrF at twice the cost.
 2. **Glossary and style rules buy consistency, not chrF.** B is +0.5 chrF over
-   A (not significant), but UI labels went from 77% to 100% correct and
-   routing to review from 6.5% to 0.5%, for $0.014 more per 1k words.
-3. **Translation memory is what teaches the house wording.** Fuzzy matches
-   lifted the 80 segments that have one by 16.2 chrF but did nothing for the
-   other 120. Concordance search (earlier translations of a segment's key
-   phrases) brings house terms such as 会计年度 and 批准者 to every segment.
+   A (not significant), but the UI labels that match Salesforce's established
+   translation went from 77% to 100%, and routing to review from 6.5% to 0.5%,
+   for $0.014 more per 1k words.
+3. **Translation memory is what teaches the house wording, and not only by
+   reusing old sentences.** Fuzzy matches lifted the 80 segments that have one
+   (D − B: +16.1 chrF) but barely the other 120 (+0.9). Concordance search
+   (earlier translations of a segment's key phrases) brings house terms such
+   as 会计年度 and 批准者 to every segment. On the 120 segments with no fuzzy
+   match, content the TM has never seen in a similar form, E still beats A by
+   +8.7 chrF (95% CI +6.3 to +11.5) and D by +6.8 (+4.4 to +9.5).
 4. **The AI edit stage is not worth it for this content.** C costs 3x B for
    +0.3 chrF and changed 7 of 200 drafts. In the blind review the reviewer
    preferred C 10 times and E 12 times (8 ties, p = 0.83); neither had a major

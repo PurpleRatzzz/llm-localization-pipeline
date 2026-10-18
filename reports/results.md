@@ -35,6 +35,30 @@ Denominators: tag integrity over the 100 tagged segments; protected intact over 
 | E | +10.3 | [+8.0, +12.9] | 0.000 |
 | F | +10.3 | [+8.0, +12.9] | 0.000 |
 
+## chrF by translation-memory coverage
+
+Configurations D-F give the model TM fuzzy matches (75%+). 80 golden segments have one and 120 do not (`data/golden_tm_coverage.json`, written by `scripts/tm_coverage.py` with the pipeline's own lookup). The second group is content the TM has never seen in a similar form, so it shows whether a gain comes only from reusing old sentences.
+
+| Run | chrF with a TM fuzzy match (n=80) [95% CI] | chrF without one (n=120) [95% CI] |
+|---|---|---|
+| A | 66.1 [59.2, 73.2] | 55.0 [51.8, 58.2] |
+| B | 64.7 [57.1, 72.4] | 56.0 [52.7, 59.2] |
+| C | 65.4 [57.7, 73.1] | 56.2 [52.8, 59.4] |
+| D | 80.8 [75.2, 86.5] | 56.9 [53.4, 60.1] |
+| E | 83.3 [78.4, 88.3] | 63.7 [59.8, 67.6] |
+| F | 83.3 [78.4, 88.3] | 63.7 [59.8, 67.6] |
+
+Paired differences within each group (bootstrap resamples drawn within the group):
+
+| Comparison | With a TM fuzzy match [95% CI] | Without one [95% CI] |
+|---|---|---|
+| B − A | -1.4 [-5.2, +3.3] | +1.0 [-0.6, +2.6] |
+| C − A | -0.6 [-4.7, +4.1] | +1.1 [-0.5, +2.7] |
+| D − A | +14.8 [+10.1, +20.2] | +1.9 [+0.2, +3.5] |
+| E − A | +17.2 [+12.3, +22.8] | +8.7 [+6.3, +11.5] |
+| F − A | +17.2 [+12.3, +22.8] | +8.7 [+6.3, +11.5] |
+| E − D | +2.5 [+0.2, +4.7] | +6.8 [+4.4, +9.5] |
+
 ## Cost per stage
 
 | Run | Stage | Requests | Input tokens | Output tokens | API seconds | Cost (USD) |

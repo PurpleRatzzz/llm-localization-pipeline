@@ -37,6 +37,9 @@ from l10n_pipeline import qa_gate  # noqa: E402
 from l10n_pipeline.context import GLOSSARY_PATH, load_glossary  # noqa: E402
 
 GOLDEN_FILE = REPO / "data/golden.jsonl"
+# Which golden segments got a TM fuzzy match in configs D-F (scripts/tm_coverage.py).
+TM_COVERAGE_FILE = REPO / "data/golden_tm_coverage.json"
+TM_GROUPS = {"with_match": "with a TM fuzzy match", "without_match": "without one"}
 RUNS_DIR = REPO / "runs"
 DEFAULT_OUT = REPO / "reports/results.md"
 
@@ -155,11 +158,15 @@ def ci95(values: list[float]) -> list[float]:
     return [cuts[0], cuts[-1]]
 
 
-def chrf_metrics(rows: list[dict], targets: list[str],
-                 resamples: list[list[int]]) -> tuple[dict, list[float]]:
-    """chrF overall (with CI), on the tagged and on the untagged segments.
+def chrf_metrics(rows: list[dict], targets: list[str], resamples: list[list[int]],
+                 groups: dict[str, list[int]] | None = None,
+                 group_resamples: dict[str, list[list[int]]] | None = None
+                 ) -> tuple[dict, dict[str, list[float]]]:
+    """chrF overall (with CI), on the tagged and on the untagged segments, and
+    for each group of segments in `groups` (with its own CI).
 
-    Also returns the chrF of every bootstrap resample, for the paired comparison.
+    Also returns the chrF of every bootstrap resample ({"overall": [...],
+    group: [...]}), for the paired comparisons.
     """
     hyps = [plain_text(target) for target in targets]
     refs = [plain_text(row["reference"]) for row in rows]
@@ -182,7 +189,19 @@ def chrf_metrics(rows: list[dict], targets: list[str],
         "tagged": corpus_chrf([hyps[i] for i in tagged], [refs[i] for i in tagged]),
         "untagged": corpus_chrf([hyps[i] for i in untagged], [refs[i] for i in untagged]),
     }
-    return metrics, boot
+    boots = {"overall": boot}
+    for name, members in (groups or {}).items():
+        # Resample within the group: each resample draws len(members)
+        # segments of that group, so the CI describes the group alone.
+        group_boot = [chrf_from_stats([stats[members[i]] for i in sample])
+                      for sample in group_resamples[name]]
+        metrics.setdefault("by_tm", {})[name] = {
+            "n": len(members),
+            "chrf": chrf_from_stats([stats[i] for i in members]),
+            "ci95": ci95(group_boot),
+        }
+        boots[name] = group_boot
+    return metrics, boots
 
 
 def paired_comparison(run_boot: list[float], base_boot: list[float],
@@ -293,7 +312,9 @@ def cost_metrics(summary: dict, source_words: int) -> dict:
 # --------------------------------------------------------------- evaluation
 
 def evaluate_run(run_dir: Path, golden: dict[str, dict], glossary,
-                 resamples: list[list[int]]) -> tuple[dict, list[float]]:
+                 resamples: list[list[int]], groups: dict[str, list[int]] | None = None,
+                 group_resamples: dict[str, list[list[int]]] | None = None
+                 ) -> tuple[dict, dict[str, list[float]]]:
     """All metrics for one run, plus its bootstrap chrF scores."""
     summary, segments = load_run(run_dir, golden)
     rows = list(golden.values())
@@ -310,7 +331,7 @@ def evaluate_run(run_dir: Path, golden: dict[str, dict], glossary,
         warn(f"{run_dir.name}: stage costs add up to ${stage_sum:.6f}, "
              f"but total_cost_usd is ${summary['total_cost_usd']:.6f}")
 
-    chrf, boot = chrf_metrics(rows, targets, resamples)
+    chrf, boots = chrf_metrics(rows, targets, resamples, groups, group_resamples)
     routed = sum(seg["status"] == "needs_review" for seg in segments)
     result = {
         "name": run_dir.name,
@@ -325,7 +346,7 @@ def evaluate_run(run_dir: Path, golden: dict[str, dict], glossary,
         "edit": edit_metrics(segments),
         "cost": cost_metrics(summary, words),
     }
-    return result, boot
+    return result, boots
 
 
 def reference_problems(golden: dict[str, dict], glossary) -> list[dict]:
@@ -344,22 +365,71 @@ def reference_problems(golden: dict[str, dict], glossary) -> list[dict]:
     return problems
 
 
-def evaluate(run_dirs: list[Path], golden: dict[str, dict], glossary) -> dict:
-    """Every number of the report, as one JSON-ready dict."""
+def repo_relative(path: Path) -> str:
+    """The path as shown in the report: relative to the repo when inside it."""
+    try:
+        return str(path.relative_to(REPO))
+    except ValueError:
+        return str(path)
+
+
+def tm_groups(golden: dict[str, dict]) -> dict[str, list[int]] | None:
+    """Positions of the golden segments with and without a TM fuzzy match,
+    or None if data/golden_tm_coverage.json does not exist."""
+    if not TM_COVERAGE_FILE.exists():
+        return None
+    with_match = set(json.loads(TM_COVERAGE_FILE.read_text(encoding="utf-8"))["with_match"])
+    ids = list(golden)
+    return {"with_match": [i for i, seg_id in enumerate(ids) if seg_id in with_match],
+            "without_match": [i for i, seg_id in enumerate(ids) if seg_id not in with_match]}
+
+
+def evaluate(run_dirs: list[Path], golden: dict[str, dict], glossary,
+             extra_pairs: list[tuple[str, str]] = ()) -> dict:
+    """Every number of the report, as one JSON-ready dict.
+
+    extra_pairs: (run, other) names compared within each TM group in addition
+    to every run vs the baseline, e.g. ("E", "D") for the concordance step.
+    """
     resamples = make_resamples(len(golden))
-    runs, boots = [], []
+    groups = tm_groups(golden)
+    # Each group gets its own resamples (other seeds), shared by all runs so
+    # the comparisons within a group are paired too.
+    group_resamples = {name: make_resamples(len(members), seed=SEED + n)
+                       for n, (name, members) in enumerate((groups or {}).items(), start=1)}
+    runs, boots = [], {}
     for run_dir in run_dirs:
-        result, boot = evaluate_run(run_dir, golden, glossary, resamples)
+        result, run_boots = evaluate_run(run_dir, golden, glossary, resamples, groups,
+                                         group_resamples)
         runs.append(result)
-        boots.append(boot)
+        boots[result["name"]] = run_boots
 
     baseline = runs[0]
-    for run, boot in zip(runs, boots):
+    for run in runs:
         if run is baseline:
             run["vs_baseline"] = None
         else:
             delta = run["chrf"]["overall"] - baseline["chrf"]["overall"]
-            run["vs_baseline"] = paired_comparison(boot, boots[0], delta)
+            run["vs_baseline"] = paired_comparison(boots[run["name"]]["overall"],
+                                                   boots[baseline["name"]]["overall"], delta)
+
+    tm_coverage = None
+    if groups:
+        by_name = {run["name"]: run for run in runs}
+        pairs = [(run["name"], baseline["name"]) for run in runs if run is not baseline]
+        pairs += [pair for pair in extra_pairs if pair not in pairs]
+        comparisons = []
+        for name, other in pairs:
+            if name not in by_name or other not in by_name:
+                raise ValueError(f"--pair {name} {other}: both must be evaluated runs")
+            comparisons.append({"run": name, "vs": other, "by_tm": {
+                group: paired_comparison(boots[name][group], boots[other][group],
+                                         by_name[name]["chrf"]["by_tm"][group]["chrf"]
+                                         - by_name[other]["chrf"]["by_tm"][group]["chrf"])
+                for group in groups}})
+        tm_coverage = {"file": repo_relative(TM_COVERAGE_FILE),
+                       "groups": {group: len(members) for group, members in groups.items()},
+                       "comparisons": comparisons}
 
     rows = list(golden.values())
     return {
@@ -372,6 +442,7 @@ def evaluate(run_dirs: list[Path], golden: dict[str, dict], glossary) -> dict:
         "bootstrap": {"resamples": N_RESAMPLES, "seed": SEED},
         "baseline": baseline["name"],
         "runs": runs,
+        "tm_coverage": tm_coverage,
         "human_reference": gate_metrics(rows, [row["reference"] for row in rows], glossary),
         "reference_problems": reference_problems(golden, glossary),
     }
@@ -441,6 +512,34 @@ def markdown_report(results: dict) -> str:
                        f"{diff['share_le_0']:.3f} |")
     else:
         out.append("Only one run, so there is nothing to compare.")
+
+    coverage = results.get("tm_coverage")
+    if coverage:
+        n_with, n_without = (coverage["groups"][g] for g in TM_GROUPS)
+        out += ["", "## chrF by translation-memory coverage", "",
+                f"Configurations D-F give the model TM fuzzy matches (75%+). {n_with} golden "
+                f"segments have one and {n_without} do not (`{coverage['file']}`, written by "
+                "`scripts/tm_coverage.py` with the pipeline's own lookup). The second group is "
+                "content the TM has never seen in a similar form, so it shows whether a gain "
+                "comes only from reusing old sentences.", "",
+                f"| Run | chrF with a TM fuzzy match (n={n_with}) [95% CI] | "
+                f"chrF without one (n={n_without}) [95% CI] |", "|---|---|---|"]
+        for run in runs:
+            cells = []
+            for group in TM_GROUPS:
+                g = run["chrf"]["by_tm"][group]
+                cells.append(f"{g['chrf']:.1f} [{g['ci95'][0]:.1f}, {g['ci95'][1]:.1f}]")
+            out.append(f"| {run['name']} | {cells[0]} | {cells[1]} |")
+        out += ["", "Paired differences within each group (bootstrap resamples drawn within "
+                "the group):", "",
+                "| Comparison | With a TM fuzzy match [95% CI] | Without one [95% CI] |",
+                "|---|---|---|"]
+        for comp in coverage["comparisons"]:
+            cells = []
+            for group in TM_GROUPS:
+                d = comp["by_tm"][group]
+                cells.append(f"{d['delta']:+.1f} [{d['ci95'][0]:+.1f}, {d['ci95'][1]:+.1f}]")
+            out.append(f"| {comp['run']} − {comp['vs']} | {cells[0]} | {cells[1]} |")
 
     out += ["", "## Cost per stage", "",
             "| Run | Stage | Requests | Input tokens | Output tokens | API seconds | Cost (USD) |",
@@ -571,6 +670,8 @@ def main(argv: list[str] | None = None) -> None:
                              "(default: every runs/* with a summary.json, sorted by name)")
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT,
                         help="Markdown report; the .json with all numbers is written next to it")
+    parser.add_argument("--pair", nargs=2, action="append", default=[], metavar=("RUN", "OTHER"),
+                        help="also compare RUN with OTHER within each TM group (e.g. --pair E D)")
     args = parser.parse_args(argv)
 
     run_dirs = args.runs or sorted(p for p in RUNS_DIR.glob("*") if (p / "summary.json").exists())
@@ -584,7 +685,8 @@ def main(argv: list[str] | None = None) -> None:
         sys.exit(f"Run directories need distinct names (used as table labels): {names}")
 
     try:
-        results = evaluate(run_dirs, load_golden(), load_glossary())
+        results = evaluate(run_dirs, load_golden(), load_glossary(),
+                           [tuple(pair) for pair in args.pair])
     except ValueError as err:   # a partial or mismatched run
         sys.exit(str(err))
 

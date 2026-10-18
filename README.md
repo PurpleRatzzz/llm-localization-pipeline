@@ -27,8 +27,11 @@ reference translation. All configurations use `claude-sonnet-5-5`.
 - **Context beats bigger models and extra stages.** E scores +10.3 chrF over A
   (95% CI +8.0 to +12.9). Replacing Sonnet 5.5 with Opus 5.5 in config B
   added 0.4 chrF on the tune set at twice the cost.
-- **Glossary and style rules buy consistency.** They barely move chrF, but UI
-  labels go from 77% to 100% correct and routing to review from 6.5% to 0.5%.
+- **Glossary and style rules buy consistency.** They barely move chrF, but the
+  UI labels that match Salesforce's established translation go from 77% to
+  100%, and routing to review from 6.5% to 0.5%.
+- **The gain is not just reused sentences.** On the 120 golden segments with no
+  TM fuzzy match, E still beats A by +8.7 chrF (95% CI +6.3 to +11.5).
 - **The AI edit stage was not worth its cost.** In a blind human review of 30
   auto-approved segments, the reviewer preferred C 10 times and E 12 times
   (8 ties), and neither had a major error. E costs about half as much.
@@ -158,8 +161,8 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python -I scripts/prepare_data.py       # download data, build golden/tune sets
 export ANTHROPIC_API_KEY=...                      # your own key
 .venv/bin/python -m l10n_pipeline eval --config E --data data/golden.jsonl --out runs/E
-.venv/bin/python -I scripts/evaluate.py           # writes reports/results.md
-.venv/bin/python -m pytest                        # 90 tests, no API key needed
+.venv/bin/python -I scripts/evaluate.py --pair E D  # writes reports/results.md
+.venv/bin/python -m pytest                        # 97 tests, no API key needed
 ```
 
 The CLI also reads and writes XLIFF 1.2: Custom Labels in, translations with
