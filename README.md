@@ -224,8 +224,9 @@ whole project, including tuning, cost about $5.
 - **Length limits count characters.** A Chinese character is roughly twice as
   wide as a Latin letter, so a character limit is lenient for Chinese. XLIFF
   supports pixel limits, which need font data.
-- **Scope.** zh-CN only; help documentation only. UI strings are supported
-  through the XLIFF interface but not evaluated.
+- **Scope.** zh-CN only. The benchmark covers help documentation; UI strings
+  were checked only in the small A-B experiment above (31 single strings, one
+  judge).
 
 ## Next steps
 
