@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file original="salesforce-help.xml" source-language="en-US" target-language="zh-CN" datatype="xml">
+    <body>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000000193">
+        <source>Salesforce sets your package API access privileges to <g id="1" ctype="x-parmname">Unrestricted</g>. You can change this setting to further restrict API access of Salesforce components in the package. For more information, see <g id="2" ctype="x-cite"><g id="3" ctype="x-xref"><g id="4" ctype="x-ph">Manage API and Dynamic Apex Access in Packages</g></g></g>.</source>
+        <target state="needs-review-translation">Salesforce 将贵组织的软件包 API 访问权限设置为<g id="1" ctype="x-parmname">不受限</g>。您可以更改此设置，以进一步限制软件包中 Salesforce 组件的 API 访问权限。有关详细信息，请参阅<g id="2" ctype="x-cite"><g id="3" ctype="x-xref"><g id="4" ctype="x-ph">管理软件包中的 API 和动态 Apex 访问权限</g></g></g>。</target>
+        <note from="qa" priority="1" annotates="target">[error] mqm_accuracy: [major] The source says 'your package', not 'your organization'; 贵组织 was added, which is not in the source.</note>
+      </trans-unit>
+      <trans-unit id="salesforce_localization_xml_mt:enzh_dev_0000000617">
+        <source>Since Kimmy added the topics <g id="1" ctype="x-parmname">Sales Training</g>, <g id="2" ctype="x-parmname">Western Region</g>, and <g id="3" ctype="x-parmname">Feedback Request</g> to her post, these topics are also added to the file she attached. Now, her coworkers can click a topic to find other posts, files, and records associated with that topic. If the topic is associated with records other than files, go to the <g id="4" ctype="x-uicontrol">Records</g> tab and choose <g id="5" ctype="x-uicontrol">Files</g>. Otherwise, use the <g id="6" ctype="x-uicontrol">Feeds</g> tab to see all posts and files for the topic.</source>
+        <target state="needs-review-translation">由于 Kimmy 已将主题<g id="1" ctype="x-parmname">Sales Training</g>、<g id="2" ctype="x-parmname">Western Region</g> 和 <g id="3" ctype="x-parmname">Feedback Request</g> 添加到她的帖子中，这些主题也会添加到她附加的文件中。现在，她的同事可以单击某个主题来查找与该主题相关联的其他帖子、文件和记录。如果该主题与文件以外的记录相关联，请转到<g id="4" ctype="x-uicontrol">记录</g>选项卡并选择<g id="5" ctype="x-uicontrol">文件</g>。否则，请使用<g id="6" ctype="x-uicontrol">摘要</g>选项卡查看该主题的所有帖子和文件。</target>
+        <note from="qa" priority="1" annotates="target">[error] mqm_accuracy: [major] Topic names inside &lt;parmname&gt; (Sales Training, Western Region, Feedback Request) are left in English, but R5 requires translating &lt;parmname&gt; content.</note>
+        <note from="qa" priority="5" annotates="target">[warning] mqm_locale_convention: [minor] The &lt;uicontrol&gt;Feeds&lt;/uicontrol&gt; tab label should be 摘要 per glossary; this is correct, but the first &lt;parmname&gt; lacks a space before it after 主题 (R7).</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

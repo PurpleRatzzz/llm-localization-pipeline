@@ -7,6 +7,7 @@ The configurations compared in the evaluation:
   C  B + edit + verify (the full pipeline)
   D  B + translation memory: fuzzy matches (>= 75%) from the train split
   E  D + TM concordance: approved translations of specific phrases, for every segment
+  F  E + verify (no edit): E's translations, with the AI verifier routing to review
 B and C send byte-identical translate requests, so the LLM cache serves C's
 translate stage from B's run (or the other way round) at no extra cost.
 """
@@ -36,6 +37,8 @@ CONFIGS = {
     "E": {"context": True, "tm": True, "concordance": True, "edit": False, "verify": False,
           "description": "D + TM concordance (approved translations of specific phrases, "
                          "for every segment)"},
+    "F": {"context": True, "tm": True, "concordance": True, "edit": False, "verify": True,
+          "description": "E + verify: the AI verifier routes segments to review (no edit)"},
 }
 
 BATCH_SIZE = 10   # segments per request: enough to share the prompt cost, small enough to check

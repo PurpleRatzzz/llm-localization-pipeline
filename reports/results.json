@@ -445,6 +445,89 @@
         ],
         "share_le_0": 0.0
       }
+    },
+    {
+      "name": "F",
+      "config": "F",
+      "description": "E + verify: the AI verifier routes segments to review (no edit)",
+      "model": "claude-sonnet-5-5",
+      "segments": 200,
+      "chrf": {
+        "overall": 67.336094,
+        "ci95": [
+          63.661098,
+          71.205555
+        ],
+        "tagged": 70.016217,
+        "untagged": 61.254246
+      },
+      "tag_integrity": {
+        "ok": 100,
+        "n": 100,
+        "pct": 100.0,
+        "failed_ids": []
+      },
+      "protected_intact": {
+        "ok": 6,
+        "n": 6,
+        "pct": 100.0,
+        "failed_ids": []
+      },
+      "term_accuracy": {
+        "ok": 55,
+        "n": 55,
+        "pct": 100.0,
+        "failed_ids": []
+      },
+      "ui_label_accuracy": {
+        "ok": 31,
+        "n": 31,
+        "pct": 100.0,
+        "failed_ids": []
+      },
+      "gate_pass": {
+        "ok": 200,
+        "n": 200,
+        "pct": 100.0,
+        "failed_ids": []
+      },
+      "routed": {
+        "count": 2,
+        "n": 200,
+        "pct": 1.0
+      },
+      "edit": null,
+      "cost": {
+        "total_usd": 0.822264,
+        "source_words": 3477,
+        "usd_per_1k_words": 0.236487,
+        "stages": {
+          "translate": {
+            "cost_usd": 0.420996,
+            "input_tokens": 126853,
+            "output_tokens": 16729,
+            "requests": 20,
+            "cached_requests": 20,
+            "seconds": 105.44
+          },
+          "verify": {
+            "cost_usd": 0.401268,
+            "input_tokens": 144759,
+            "output_tokens": 11175,
+            "requests": 20,
+            "cached_requests": 0,
+            "seconds": 91.344337
+          }
+        }
+      },
+      "vs_baseline": {
+        "delta": 10.270457,
+        "ci95": [
+          7.981898,
+          12.912272
+        ],
+        "share_le_0": 0.0
+      }
     }
   ],
   "human_reference": {
