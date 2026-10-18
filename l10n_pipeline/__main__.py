@@ -10,11 +10,22 @@
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 from l10n_pipeline import llm, pipeline
-from l10n_pipeline.xliff import read_xliff, write_xliff
 from l10n_pipeline.units import Unit
+from l10n_pipeline.xliff import read_file_attributes, read_xliff, write_xliff
+
+
+def target_language(value: str) -> str:
+    """Accept the BCP 47 form (zh-CN, used in XLIFF) and the Salesforce
+    metadata form (zh_CN); anything else fails before any API call."""
+    if value.replace("_", "-").lower() == "zh-cn":
+        return "zh-CN"
+    raise argparse.ArgumentTypeError(
+        f"unsupported target language {value!r}: only zh-CN (or zh_CN) has a glossary "
+        "and style rules today")
 
 
 def load_units(path: Path, limit: int | None) -> list[Unit]:
@@ -42,17 +53,20 @@ def cmd_eval(args) -> None:
 
 def cmd_translate(args) -> None:
     units, _ = read_xliff(args.input, content_type=args.content_type)
+    # Keep the caller's document name and source language in the output file.
+    attrs = read_file_attributes(args.input)
     results, stats = pipeline.run(units, args.config)
     # All units go back, each with a state: "translated" or "needs-review-translation".
     write_xliff(units, results, args.output, target_lang=args.target_lang,
-                original=args.input.name)
+                source_lang=attrs.get("source-language", "en-US"),
+                original=attrs.get("original", args.input.name))
     review = sum(r.status == "needs_review" for r in results)
     cost = sum(s.cost_usd for s in stats.stages.values())
     print(f"{len(results)} units translated, {review} need review, ${cost:.4f}. "
           f"Written to {args.output}")
 
 
-def main() -> None:
+def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(prog="python -m l10n_pipeline")
     sub = parser.add_subparsers(dest="command", required=True)
 
@@ -71,11 +85,19 @@ def main() -> None:
                       help="doc: XML with inline tags; ui: plain-text UI strings such as Custom Labels")
     # E is the configuration recommended in reports/decision_memo.md.
     p_tr.add_argument("--config", choices=sorted(pipeline.CONFIGS), default="E")
-    p_tr.add_argument("--target-lang", default="zh-CN", help="only zh-CN has context assets today")
+    p_tr.add_argument("--target-lang", type=target_language, default="zh-CN",
+                      help="zh-CN or zh_CN (the only language with a glossary and style rules)")
     p_tr.set_defaults(func=cmd_translate)
 
-    args = parser.parse_args()
-    args.func(args)
+    args = parser.parse_args(argv)
+    try:
+        args.func(args)
+    except (llm.LLMError, FileNotFoundError) as err:
+        # Missing API key, rejected credentials, missing input file or
+        # translation memory: a clear message and a non-zero exit code
+        # instead of a traceback, so calling tools can detect the failure.
+        print(f"error: {err}", file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

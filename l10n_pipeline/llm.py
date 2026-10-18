@@ -9,6 +9,7 @@ Keeping every call in one place gives three things the pipeline relies on:
 
 import hashlib
 import json
+import os
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -46,10 +47,14 @@ class LLMResponse:
 
 
 def _get_client() -> anthropic.Anthropic:
-    # Created on first use, so importing this module (e.g. in tests) needs no API key.
-    # The SDK reads ANTHROPIC_API_KEY from the environment; the key is never in code.
+    # Created on first use, so importing this module (e.g. in tests) and
+    # re-running fully cached requests need no API key. The SDK reads
+    # ANTHROPIC_API_KEY from the environment; the key is never in code.
     global _client
     if _client is None:
+        if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")):
+            raise LLMError("ANTHROPIC_API_KEY is not set. Set it in your shell first: "
+                           "export ANTHROPIC_API_KEY=...")
         _client = anthropic.Anthropic()
     return _client
 
@@ -95,7 +100,10 @@ def call_json(*, system: str, user: str, schema: dict, max_tokens: int = 8000,
                            saved["seconds"], cached=True)
 
     start = time.perf_counter()
-    response = _get_client().messages.create(**params)
+    try:
+        response = _get_client().messages.create(**params)
+    except anthropic.AuthenticationError as err:
+        raise LLMError(f"The API rejected the credentials: {err.message}") from err
     seconds = time.perf_counter() - start
 
     # Check why the model stopped before reading the content.

@@ -17,6 +17,7 @@ A CAT tool shows <g> as a protected tag pair around translatable text: the
 translator can move the tags but cannot break them.
 """
 
+import re
 import xml.etree.ElementTree as ET
 from collections import Counter
 from xml.sax.saxutils import escape
@@ -35,6 +36,14 @@ STATES = {"needs_review": "needs-review-translation", "auto_approved": "translat
 
 # XLIFF <note priority> goes from 1 (highest) to 10.
 PRIORITIES = {"error": "1", "warning": "5"}
+
+# Notes that carry context for the translator: from="developer" (the content
+# author), from="context" (structured markers written by the i18n gate in the
+# sister project, e.g. "component: c-hero", "ui: button", "maxlen: 40"), or no
+# "from" at all (many tools omit it). Notes from "qa" are our own reasons.
+CONTEXT_NOTE_SOURCES = {"developer", "context"}
+# A "maxlen: N" marker in a context note is a length limit in characters.
+MAXLEN_RE = re.compile(r"\bmaxlen:\s*(\d+)")
 
 
 # ------------------------------------------------------------------ export
@@ -209,10 +218,13 @@ def read_xliff(path, *, content_type: str = "doc") -> tuple[list[Unit], dict[str
         if trans_unit.get("maxwidth") and trans_unit.get("size-unit") == "char":
             max_length = int(trans_unit.get("maxwidth"))
 
-        # Context notes: from="developer", or no "from" at all (many tools omit
-        # it). Notes from "qa" are our own reasons from a previous export.
         context = [note.text or "" for note in trans_unit.findall("{*}note")
-                   if note.get("from", "developer") == "developer"]
+                   if note.get("from", "developer") in CONTEXT_NOTE_SOURCES]
+        if max_length is None:
+            # No maxwidth: fall back to a "maxlen: N" marker in a context note,
+            # so the length check still runs.
+            marker = next((m for m in map(MAXLEN_RE.search, context) if m), None)
+            max_length = int(marker.group(1)) if marker else None
 
         units.append(Unit(
             id=unit_id,
@@ -228,6 +240,13 @@ def read_xliff(path, *, content_type: str = "doc") -> tuple[list[Unit], dict[str
             if text.strip():           # an empty <target/> is not a translation
                 targets[unit_id] = text
     return units, targets
+
+
+def read_file_attributes(path) -> dict[str, str]:
+    """Attributes of the first <file> element (original, source-language, ...),
+    so a translated file keeps the caller's document name and languages."""
+    file_elem = ET.parse(path).getroot().find(".//{*}file")
+    return dict(file_elem.attrib) if file_elem is not None else {}
 
 
 def _read_segment(elem: ET.Element, content_type: str) -> str:
