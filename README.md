@@ -174,6 +174,10 @@ QA notes out. Another tool can call it like this (details in
 .venv/bin/python -m l10n_pipeline translate --in labels.xlf --out labels.zh-CN.xlf --content-type ui
 ```
 
+[lwc-i18n-readiness](https://github.com/PurpleRatzzz/lwc-i18n-readiness), an
+i18n readiness gate for Salesforce Lightning Web Components, uses this interface
+for its Custom Labels round trip.
+
 The committed `runs/` contain every translated segment behind the numbers
 above. Re-running all six configurations costs about $2-3 in API usage. The
 whole project, including tuning, cost about $5.
@@ -196,6 +200,19 @@ whole project, including tuning, cost about $5.
 - **One reference translation per segment.** chrF measures closeness to
   Salesforce's existing wording, not overall quality, and the human review
   covers 30 segments.
+- **A per-string QA gate cannot see sentences assembled in code.**
+  [lwc-i18n-readiness](https://github.com/PurpleRatzzz/lwc-i18n-readiness) ran
+  its Custom Labels through this pipeline (config E, six runs). All 31 single
+  strings were acceptable, with or without upstream context. The 9 failures
+  were of two kinds:
+  - 6 were sentences that code builds from pieces. For example, dreamhouse's
+    "18 days on the market" came back as "18 已上市 天".
+  - 3 were a hardcoded imperial unit (miles).
+
+  The gate sent 0 units to review in all six runs, because each piece is fine
+  on its own. Fragments have to be stopped upstream or caught in in-context
+  review
+  ([experiment report](https://github.com/PurpleRatzzz/lwc-i18n-readiness/blob/main/examples/context-experiment/README.md)).
 - **Two style decisions knowingly differ from most references**:
   - R11: login accounts are 账户, the current standard form (账 for accounts
     and records). Most dev references use 帐户 (17 vs 6).
