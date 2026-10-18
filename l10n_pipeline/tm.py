@@ -129,6 +129,9 @@ class TranslationMemory:
 @lru_cache(maxsize=1)
 def default_tm() -> TranslationMemory:
     """The train split as TM, loaded once per process (~2 seconds)."""
+    if not TM_PATH.exists():
+        raise FileNotFoundError(f"{TM_PATH} not found. Build the translation memory first: "
+                                ".venv/bin/python -I scripts/prepare_data.py")
     with open(TM_PATH, encoding="utf-8") as f:
         rows = [json.loads(line) for line in f]
     return TranslationMemory([(row["source"], row["reference"]) for row in rows])

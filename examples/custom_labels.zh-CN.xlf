@@ -14,7 +14,7 @@
       </trans-unit>
       <trans-unit id="Opportunity_Stage_Help" maxwidth="40" size-unit="char">
         <source>Select the stage that best describes this Opportunity.</source>
-        <target state="translated">选择最能描述此业务机会的阶段。</target>
+        <target state="translated">请选择最能描述此业务机会的阶段。</target>
         <note from="developer" annotates="general">Help text under the Stage picklist.</note>
       </trans-unit>
     </body>

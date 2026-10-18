@@ -69,7 +69,8 @@ def main() -> None:
     p_tr.add_argument("--out", dest="output", type=Path, required=True)
     p_tr.add_argument("--content-type", choices=["doc", "ui"], default="doc",
                       help="doc: XML with inline tags; ui: plain-text UI strings such as Custom Labels")
-    p_tr.add_argument("--config", choices=sorted(pipeline.CONFIGS), default="C")
+    # E is the configuration recommended in reports/decision_memo.md.
+    p_tr.add_argument("--config", choices=sorted(pipeline.CONFIGS), default="E")
     p_tr.add_argument("--target-lang", default="zh-CN", help="only zh-CN has context assets today")
     p_tr.set_defaults(func=cmd_translate)
 

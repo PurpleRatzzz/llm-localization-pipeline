@@ -11,10 +11,11 @@ python -m l10n_pipeline translate --in labels.xlf --out labels.zh-CN.xlf --conte
 | Option | Values | Default |
 |---|---|---|
 | `--content-type` | `ui`: plain-text UI strings such as Salesforce Custom Labels; `doc`: XML fragments with inline tags | `doc` |
-| `--config` | `A` translate only, `B` + style rules and glossary, `C` + edit and verify, `D` B + translation memory | `C` |
+| `--config` | `A` translate only, `B` + style rules and glossary, `C` + edit and verify, `D` B + translation memory, `E` D + concordance (recommended), `F` E + verify | `E` |
 | `--target-lang` | only `zh-CN` has a glossary and style rules today | `zh-CN` |
 
-Requires `ANTHROPIC_API_KEY` in the environment.
+Requires `ANTHROPIC_API_KEY` in the environment. Configurations D-F also need
+the translation memory, built once by `.venv/bin/python -I scripts/prepare_data.py`.
 
 ## Input: what the caller puts in the file
 
@@ -47,6 +48,6 @@ from l10n_pipeline import pipeline
 
 units = [Unit(id="Close_Case_Button", source="Close", content_type="ui",
               note="Button on the Case page", max_length=10)]
-results, stats = pipeline.run(units, config="C")
+results, stats = pipeline.run(units, config="E")
 results[0].target, results[0].status, results[0].issues
 ```
