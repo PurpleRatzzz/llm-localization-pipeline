@@ -52,6 +52,7 @@ flowchart LR
     G1 --> E["LLM edit<br/>(config C)"]
     E --> G2{"QA gate<br/>keep draft if the edit<br/>adds an error"}
     G2 --> V["LLM verify, MQM<br/>(configs C, F)"]
+    G1 -.->|"config F: no edit"| V
     G1 -.->|"configs A, B, D, E"| R
     V --> R{"Route"}
     R -->|"no error"| OK["auto-approved"]
@@ -220,11 +221,14 @@ whole project, including tuning, cost about $5.
 - Test the verifier with a short context (no TM examples) to cut its cost.
 - Run on a second language pair (en-ja is in the dataset).
 
-## Data and license
+## License and data
 
-Data: [salesforce/localization-xml-mt](https://github.com/salesforce/localization-xml-mt),
-Salesforce online help documentation translated by professionals. It is
-licensed under CC BY-NC 4.0 and used here non-commercially with attribution.
+- **Code:** MIT ([`LICENSE`](LICENSE)).
+- **Data:** the segments in `data/`, `runs/` and `reviews/` come from
+  [salesforce/localization-xml-mt](https://github.com/salesforce/localization-xml-mt),
+  Salesforce online help documentation translated by professionals. They
+  remain under CC BY-NC 4.0 and are used here non-commercially with
+  attribution.
 
 > Kazuma Hashimoto, Raffaella Buschiazzo, James Bradbury, Teresa Marshall,
 > Richard Socher, and Caiming Xiong. 2019. A High-Quality Multilingual Dataset
