@@ -8,6 +8,7 @@
 - **B** (config B): Translate with style rules + glossary. Model `claude-sonnet-5-5`.
 - **C** (config C): Full pipeline: translate + edit + verify, gate after each stage. Model `claude-sonnet-5-5`.
 - **D** (config D): Translate with style rules + glossary + translation memory (fuzzy matches >= 75%). Model `claude-sonnet-5-5`.
+- **E** (config E): D + TM concordance (approved translations of specific phrases, for every segment). Model `claude-sonnet-5-5`.
 
 ## Main comparison
 
@@ -17,6 +18,7 @@
 | B | 57.6 [54.4, 60.9] | 57.8 | 57.1 | 100.0% | 100.0% | 100.0% | 98.2% | 99.5% | 0.5% | $0.077 |
 | C | 57.9 [54.6, 61.2] | 58.2 | 57.2 | 100.0% | 100.0% | 100.0% | 100.0% | 100.0% | 2.0% | $0.232 |
 | D | 61.3 [57.8, 64.9] | 62.2 | 59.4 | 100.0% | 100.0% | 100.0% | 96.4% | 99.0% | 1.0% | $0.084 |
+| E | 67.3 [63.7, 71.2] | 70.0 | 61.3 | 100.0% | 100.0% | 100.0% | 100.0% | 100.0% | 0.0% | $0.121 |
 | Human reference | n/a | n/a | n/a | 99.0% | 83.3% | 96.8% | 100.0% | 98.5% | n/a | n/a |
 
 Denominators: tag integrity over the 100 tagged segments; protected intact over the 6 segments with a protected tag (a small sample); UI labels over 31 (segment, glossary label) pairs; terms in text over 55 (segment, glossary term) pairs; gate pass and routing over all 200 segments.
@@ -28,6 +30,7 @@ Denominators: tag integrity over the 100 tagged segments; protected intact over 
 | B | +0.5 | [-1.0, +2.3] | 0.233 |
 | C | +0.8 | [-0.7, +2.5] | 0.146 |
 | D | +4.3 | [+2.5, +6.1] | 0.000 |
+| E | +10.3 | [+8.0, +12.9] | 0.000 |
 
 ## Cost per stage
 
@@ -43,6 +46,8 @@ Denominators: tag integrity over the 100 tagged segments; protected intact over 
 | C | **total** | | | | | **$0.8082** |
 | D | translate | 20 | 62,231 | 16,671 | 106 | $0.2912 |
 | D | **total** | | | | | **$0.2912** |
+| E | translate | 20 | 126,853 | 16,729 | 105 | $0.4210 |
+| E | **total** | | | | | **$0.4210** |
 
 ## Edit stage
 
