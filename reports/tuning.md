@@ -62,6 +62,38 @@ term counts are not comparable with v1-v3.
   *Fix (reviewer decision):* Account in running text became an ambiguous
   closed set 客户|账户 with a note saying when to use which.
 
+**Diagnosis after the golden run: why B and C barely beat A on chrF**
+
+The golden results showed B and C within 1 chrF of A. Inspecting the
+lowest-scoring golden segments found no bugs (no empty, misaligned or
+truncated outputs). The model's translations were correct but not in
+Salesforce's established wording: 财年 for 会计年度 (fiscal year), 审批人 for
+批准者 (approver), 架构 for 方案 (schema). Two measurements on the golden runs:
+
+- D's gain came only from segments with a fuzzy match: +16.2 chrF on the 80
+  segments with one, +0.9 on the 120 without.
+- The reviewer's style choices that the references do not share (always 请,
+  more 您的) cost only 0.6 chrF.
+
+Two tests on the **tune** set (100 segments, never golden) followed:
+
+| | chrF | 44 with a fuzzy match | 56 without | Cost |
+|---|---:|---:|---:|---:|
+| B, claude-sonnet-5-5 | 63.2 | 69.2 | 60.5 | $0.14 |
+| B, claude-opus-5-5 | 63.6 | 70.2 | 60.6 | $0.27 |
+| D (fuzzy matches) | 66.9 | 82.2 | 59.9 | $0.15 |
+| E (D + concordance) | 70.4 | 83.0 | 64.7 | $0.22 |
+
+- A stronger model is not the fix: Opus 5.5 adds 0.4 chrF for twice the cost.
+- What is missing is the house wording. Concordance search, the CAT-tool
+  feature that finds earlier translations of a phrase, gives every segment
+  examples (`l10n_pipeline/tm.py`). It lifts the segments without a fuzzy
+  match by 4.8 chrF.
+- Transparency note: the concordance idea came from reading golden errors.
+  The method was then tested on the tune set only, and its two parameters
+  (4 examples per segment, phrases in at most 3000 TM entries) were set before
+  any run and not tuned.
+
 ## Open risk
 
 v3 reports no major errors on the tune set, so the verifier may now be too

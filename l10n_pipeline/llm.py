@@ -24,6 +24,7 @@ EFFORT = "low"
 # A cache write costs 1.25x the input price; a cache read costs 0.1x.
 PRICES = {
     "claude-sonnet-5-5": {"input": 2.00, "output": 10.00, "cache_write": 2.50, "cache_read": 0.20},
+    "claude-opus-5-5": {"input": 4.00, "output": 20.00, "cache_write": 5.00, "cache_read": 0.20},
 }
 
 CACHE_DIR = Path(__file__).resolve().parent.parent / ".cache" / "llm"
@@ -64,12 +65,15 @@ def cost_of(usage: dict, model: str) -> float:
 
 
 def call_json(*, system: str, user: str, schema: dict, max_tokens: int = 8000,
-              model: str = MODEL, effort: str = EFFORT) -> LLMResponse:
+              model: str | None = None, effort: str = EFFORT) -> LLMResponse:
     """Send one request and return the model's answer as a dict matching `schema`.
 
     Structured outputs (output_config.format) make the API guarantee that the
     answer is valid JSON for the schema, so we never parse free text.
     """
+    # Read MODEL at call time (not as a default argument), so the CLI's
+    # --model option can switch it for a whole run.
+    model = model or MODEL
     params = {
         "model": model,
         "max_tokens": max_tokens,

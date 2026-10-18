@@ -64,13 +64,25 @@ def tm_block(units: list[Unit], tm_matches: dict[str, list[dict]]) -> str:
     return "\n".join(lines)
 
 
+def concordance_block(units: list[Unit], examples: dict[str, list[dict]]) -> str:
+    lines = []
+    for unit in units:
+        for ex in examples.get(unit.id, []):
+            lines += [f'- For segment {unit.id}, "{ex["phrase"]}":',
+                      f"  EN: {ex['source']}",
+                      f"  ZH: {ex['target']}"]
+    return "\n".join(lines)
+
+
 def build_context(units: list[Unit], glossary: list[GlossaryEntry], style_rules: str,
-                  tm_matches: dict[str, list[dict]] | None = None) -> str:
+                  tm_matches: dict[str, list[dict]] | None = None,
+                  concordance: dict[str, list[dict]] | None = None) -> str:
     """The text that replaces {context} in a prompt template.
 
-    tm_matches (config D only): fuzzy matches per unit id. They go into the
-    context block rather than the prompt template, so configs A-C send exactly
-    the same requests as before and the comparison isolates the TM's effect.
+    tm_matches (configs D, E) and concordance (config E): TM examples per unit
+    id. They go into the context block rather than the prompt template, so
+    configs A-C send exactly the same requests as before and each comparison
+    isolates one change.
     """
     parts = ["## Style rules\n\n" + style_rules]
     ui = [e for unit in units for _, e in find_ui_labels(unit.source, glossary)]
@@ -87,4 +99,10 @@ def build_context(units: list[Unit], glossary: list[GlossaryEntry], style_rules:
                      "Approved translations of similar (not identical) segments from the same "
                      "documentation. Reuse their terminology and phrasing where they apply, but "
                      "translate what each source actually says.\n\n" + tm)
+    conc = concordance_block(units, concordance or {})
+    if conc:
+        parts.append("## Earlier approved translations of phrases in these segments\n\n"
+                     "Salesforce's established wording, found by searching its translation "
+                     "memory for phrases of each segment. Use the same terms and phrasing "
+                     "where the meaning is the same.\n\n" + conc)
     return "\n" + "\n\n".join(parts) + "\n"

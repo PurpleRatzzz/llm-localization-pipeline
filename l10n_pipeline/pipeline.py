@@ -6,6 +6,7 @@ The configurations compared in the evaluation:
   B  translate with style rules + glossary
   C  B + edit + verify (the full pipeline)
   D  B + translation memory: fuzzy matches (>= 75%) from the train split
+  E  D + TM concordance: approved translations of specific phrases, for every segment
 B and C send byte-identical translate requests, so the LLM cache serves C's
 translate stage from B's run (or the other way round) at no extra cost.
 """
@@ -23,15 +24,18 @@ from l10n_pipeline.qa_gate import (check_segment, find_terms, find_ui_labels, pa
 from l10n_pipeline.units import GlossaryEntry, Issue, Result, Unit
 
 CONFIGS = {
-    "A": {"context": False, "tm": False, "edit": False, "verify": False,
+    "A": {"context": False, "tm": False, "concordance": False, "edit": False, "verify": False,
           "description": "Translate only, no style rules or glossary"},
-    "B": {"context": True, "tm": False, "edit": False, "verify": False,
+    "B": {"context": True, "tm": False, "concordance": False, "edit": False, "verify": False,
           "description": "Translate with style rules + glossary"},
-    "C": {"context": True, "tm": False, "edit": True, "verify": True,
+    "C": {"context": True, "tm": False, "concordance": False, "edit": True, "verify": True,
           "description": "Full pipeline: translate + edit + verify, gate after each stage"},
-    "D": {"context": True, "tm": True, "edit": False, "verify": False,
+    "D": {"context": True, "tm": True, "concordance": False, "edit": False, "verify": False,
           "description": "Translate with style rules + glossary + translation memory "
                          "(fuzzy matches >= 75%)"},
+    "E": {"context": True, "tm": True, "concordance": True, "edit": False, "verify": False,
+          "description": "D + TM concordance (approved translations of specific phrases, "
+                         "for every segment)"},
 }
 
 BATCH_SIZE = 10   # segments per request: enough to share the prompt cost, small enough to check
@@ -104,7 +108,10 @@ def process_batch(units: list[Unit], config: str, glossary: list[GlossaryEntry],
                   style_rules: str, stats: RunStats) -> list[Result]:
     cfg = CONFIGS[config]
     tm_matches = {u.id: tm.default_tm().lookup(u.source) for u in units} if cfg["tm"] else None
-    context = ctx.build_context(units, glossary, style_rules, tm_matches) if cfg["context"] else ""
+    concordance = ({u.id: tm.default_tm().concordance(u.source) for u in units}
+                   if cfg["concordance"] else None)
+    context = (ctx.build_context(units, glossary, style_rules, tm_matches, concordance)
+               if cfg["context"] else "")
 
     drafts, response = stages.translate(units, context)
     stats.add("translate", response)
