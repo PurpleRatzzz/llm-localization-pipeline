@@ -163,7 +163,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 export ANTHROPIC_API_KEY=...                      # your own key
 .venv/bin/python -m l10n_pipeline eval --config E --data data/golden.jsonl --out runs/E
 .venv/bin/python -I scripts/evaluate.py --pair E D  # writes reports/results.md
-.venv/bin/python -m pytest                        # 97 tests, no API key needed
+.venv/bin/python -m pytest                        # 98 tests, no API key needed
 ```
 
 The CLI also reads and writes XLIFF 1.2: Custom Labels in, translations with
