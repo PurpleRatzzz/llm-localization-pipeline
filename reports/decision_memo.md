@@ -73,4 +73,6 @@ segments (`reports/results.md`), plus a blind human review of 30 segments
 - The dataset has been public since 2019, so the model may have seen it. This
   can inflate absolute scores but affects every configuration alike.
 - Two reviewer style decisions (账户 for login accounts, 请 in instructions)
-  deliberately differ from most references and cost about 0.4 chrF.
+  deliberately differ from most references. 请 (R13) costs about 0.4 chrF for
+  B and 0.5 for E. 账户 (R11) has no measurable effect, because neither form
+  occurs in the golden references (`reports/style_cost.md`).

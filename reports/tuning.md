@@ -72,8 +72,12 @@ Salesforce's established wording: 财年 for 会计年度 (fiscal year), 审批�
 
 - D's gain came only from segments with a fuzzy match: +16.2 chrF on the 80
   segments with one, +0.9 on the 120 without.
-- The reviewer's style choices that the references do not share (always 请,
-  more 您的) cost only 0.6 chrF.
+- Wordings the references do not share cost little
+  (`reports/style_cost.md`):
+  - Deleting 请 where the reference has none (style rule R13) adds 0.4 chrF
+    to B.
+  - Deleting the extra 您的 adds another 0.2. The model adds 您的 on its own:
+    19 in config A, which has no style rules, against 13 in the references.
 
 Two tests on the **tune** set (100 segments, never golden) followed:
 

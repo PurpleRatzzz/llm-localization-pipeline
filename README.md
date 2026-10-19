@@ -217,7 +217,9 @@ whole project, including tuning, cost about $5.
   - R11: login accounts are 账户, the current standard form (账 for accounts
     and records). Most dev references use 帐户 (17 vs 6).
   - R13: instructions always start with 请.
-  - Together they cost about 0.4 chrF.
+  - R13 costs about 0.4 chrF for config B and 0.5 for E. R11 has no
+    measurable effect on the golden set: neither 账户 nor 帐户 occurs in its
+    references ([`reports/style_cost.md`](reports/style_cost.md)).
 - **Possible contamination.** The dataset has been public since 2019, so the
   model may have seen it. This can inflate absolute scores; the comparison
   between configurations uses the same model throughout.
